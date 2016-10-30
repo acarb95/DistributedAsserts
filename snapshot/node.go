@@ -25,6 +25,17 @@ type Message struct {
     RequestingNode string
     SendingNode string
     Result interface{}
+    RoundNumber int
+}
+
+type AssertInfo struct {
+    RequestingNode string
+    RoundNumber int
+}
+
+type AssertObject struct {
+    Object *assert.AssertableObject
+    ActiveAsserts []AssertInfo
 }
 
 // ============================================= CONST =============================================
