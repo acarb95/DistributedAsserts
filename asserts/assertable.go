@@ -1,4 +1,4 @@
-package assert
+package asserts
 
 import (
 	"sync"
@@ -11,11 +11,11 @@ type Assertable interface {
 
 type AssertableObject struct {
     Name string
-    Lock sync.Mutex
+    Lock *sync.Mutex
     Object interface{}
 }
 
-func (ao *AssertableObject) assert() {
+func (ao *AssertableObject) assert() interface{} {
     return nil
 }
 
@@ -23,10 +23,8 @@ func (ao *AssertableObject) evaluate_results(results []interface{}) {
     // Perform evaluation
 }
 
-func create_assertable_object(name string, obj interface{}) {
-	return AssertableObject {
-		Name: name
-		Lock: &sync.Mutex{}
-		Object: obj
-	}
+func CreateAssertableObject(name string, obj interface{}) AssertableObject{
+	lock := &sync.Mutex{}
+	aObj := AssertableObject{ Name: name, Lock: lock, Object: obj}
+	return aObj
 }
