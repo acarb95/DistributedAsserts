@@ -1,4 +1,4 @@
-package DistributedAsserts
+package distributedasserts
 
 import (
 	"sync"
