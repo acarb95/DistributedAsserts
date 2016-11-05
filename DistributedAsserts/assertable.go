@@ -4,7 +4,7 @@ import (
 	"sync"
 )
 
-type Assertable interface {
+type EvaluateAssertable interface {
     assert() interface{}
     evaluate_results(results []interface{})
 }
