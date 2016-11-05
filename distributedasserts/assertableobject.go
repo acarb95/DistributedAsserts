@@ -2,6 +2,8 @@ package distributedasserts
 
 import (
 	"sync"
+	"net"
+	"github.com/arcaneiceman/GoVector/govec"
 )
 
 type AssertableObject struct {
@@ -12,7 +14,11 @@ type AssertableObject struct {
 
 func (a AssertableObject) getObject() interface{} {
 	a.lock.Lock()
-	copyObj := a.object.Copy()
+	// Not sure if this really works, but trying to get a pointer to the object, 
+	// but then dereference the pointer so GoLang actually copies the object 
+	// instead of passing a pointer. Seems redundant, but that means that
+	// copyObj := a.object implicitly does a copy of the struct object. 
+	copyObj := *(&a.object)
 	a.lock.Unlock()
 	return copyObj
 }
@@ -24,7 +30,7 @@ func (a AssertableObject) setObject(newObj interface{}) {
 }
 
 func (a AssertableObject) getName() string {
-	return name
+	return a.name
 }
 
 func (a AssertableObject) sendObject(writeTo func ([]byte,net.Addr) (int, error), msg string, addr net.Addr, LOG *govec.GoLog) (int, error) {
@@ -37,6 +43,6 @@ func (a AssertableObject) sendObject(writeTo func ([]byte,net.Addr) (int, error)
 
 func CreateAssertableObject(name string, obj interface{}) AssertableObject{
 	lock := &sync.Mutex{}
-	aObj := AssertableObject{ Name: name, Lock: lock, Object: obj}
+	aObj := AssertableObject{ name: name, lock: lock, object: obj}
 	return aObj
 }

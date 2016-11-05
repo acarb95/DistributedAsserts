@@ -1,8 +1,4 @@
-package asserts
-
-import (
-	"sync"
-)
+package distributedasserts
 
 type Assertable struct {
     NodesVariables map[string][]string
