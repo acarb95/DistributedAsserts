@@ -10,7 +10,7 @@ import (
 // Estimating RTT
 // 
 func initDistributeAssert() {
-	initAssertion();
-	initRTT();
-	initTiming();
+	//initAssertion();
+//	initRTT();
+	//initTiming();
 }

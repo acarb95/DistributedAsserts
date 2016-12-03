@@ -2,6 +2,8 @@ package asserts
 
 import (
 	"sync"
+	"net"
+	"github.com/arcaneiceman/GoVector/govec"
 )
 
 type AssertableObject struct {
