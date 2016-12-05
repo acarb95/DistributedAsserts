@@ -7,7 +7,7 @@ import (
 	"math/rand"
 	"net"
 	"os"
-    "github.com/acarb95/DistributedAsserts/asserts"
+    "DistributedAsserts/assert"
 )
 
 const (
@@ -15,7 +15,17 @@ const (
 	RUNS         = 500
 )
 
+var n int
+var m int
+
+func assertValue(values map[string][string]int) bool {
+	return true;
+}
+
 func main() {
+	assert.InitDistributedAssert(":18589", []string{":9099"}, "client");
+	assert.AddAssertable("n", &n, nil);
+	assert.AddAssertable("m", &m, nil);
 	localAddr, err := net.ResolveUDPAddr("udp4", ":18585")
 	printErrAndExit(err)
 	remoteAddr, err := net.ResolveUDPAddr("udp4", ":9090")
@@ -30,6 +40,8 @@ func main() {
 			fmt.Printf("[CLIENT] %s", err.Error())
 			continue
 		}
+		requestedValues := map[string][]string;
+		assert.Assert(assertValue, )
 		fmt.Printf("[CLIENT] %d/%d: %d + %d = %d\n", t, RUNS, n, m, sum)
 	}
 	fmt.Println()
