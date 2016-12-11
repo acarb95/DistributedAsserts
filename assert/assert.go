@@ -44,6 +44,8 @@ var assertableDictionary map[string]interface{}
 var assertableFunctions map[string]func(interface{})interface{}
 var roundToResponseMap map[int]*map[string]map[string]interface{}
 var roundTripTimeMap map[string]time.Duration
+var timingFunction func()time.Time
+var rttFunction func(string)time.Duration
 var LOG *govec.GoLog
 var debug = true
 var timeOffset = 0 * time.Second
@@ -91,7 +93,7 @@ func sendToAddr(payload _message, addr string, logMessage string) {
     if debug {
         fmt.Println(logMessage)
         fmt.Printf("Attempting to send [MessageType: %d] to %s\n", 
-         payload.MessageType, address)
+           payload.MessageType, address)
     }
     capture.WriteToUDP(listener.WriteToUDP, LOG.PrepareSend(logMessage, payload), address)
 }
@@ -116,13 +118,35 @@ func receiveConnections() chan _message {
             }
             if debug {
                 fmt.Printf("Received message [MessageType: %d] from [%s]\n",
-                   incomingMessage.MessageType,
-                   addr)
+                 incomingMessage.MessageType,
+                 addr)
             }
             msg <- incomingMessage
         }
         }()
         return msg
+    }
+
+    func handleAssert(msg _message) {
+        msg.MessageType = ASSERT_RETURN;
+        respondTo := msg.RequestingNode;
+        msg.RequestingNode = address;
+        requestedValues := msg.Result.([]interface{})
+        valMap := make(map[string]interface{})
+        time.Sleep(msg.MessageTime.Sub(getTime()))
+        for _, val := range requestedValues {
+            intArr := val.([]uint8)
+            v := B2S(intArr)
+            f, ok := assertableFunctions[v]
+            localVal := assertableDictionary[v];
+            if (ok && f != nil) {
+                localVal = f(localVal);
+            } 
+            valMap[v] = getValue(localVal);
+        }
+        msg.Result = valMap;
+        fmt.Println(reflect.TypeOf(msg.Result))
+        sendToAddr(msg, respondTo, "Assert Response")
     }
 
     func processData(message_chan chan _message){
@@ -145,23 +169,7 @@ func receiveConnections() chan _message {
                     }
                     break;
                 case ASSERT_REQUEST:
-                    message.MessageType = ASSERT_RETURN;
-                    message.RequestingNode = address;
-                    requestedValues := message.Result.([]interface{})
-                    valMap := make(map[string]interface{})
-                    for _, val := range requestedValues {
-                        intArr := val.([]uint8)
-                        v := B2S(intArr)
-                        f, ok := assertableFunctions[v]
-                        localVal := assertableDictionary[v];
-                        if (ok && f != nil) {
-                            localVal = f(localVal);
-                        } 
-                        valMap[v] = getValue(localVal);
-                    }
-                    message.Result = valMap;
-                    fmt.Println(reflect.TypeOf(message.Result))
-                    sendToAddr(message, respondTo, "Assert Response")
+                    go handleAssert(message)
                     break;
                 case ASSERT_RETURN:
                     val, ok := roundToResponseMap[message.RoundNumber];
@@ -185,12 +193,12 @@ func receiveConnections() chan _message {
 // ===================================== RTT METHODS =====================================
 
         func getRTT(addr string) {
-         RTTmessage := _message{MessageType: RTT_REQUEST, RequestingNode:address, RoundNumber: roundNumberRTT};
-         roundTripTime[addr] = getTime()
-         sendToAddr(RTTmessage, addr, "Round Trip Request");
-     }
+           RTTmessage := _message{MessageType: RTT_REQUEST, RequestingNode:address, RoundNumber: roundNumberRTT};
+           roundTripTime[addr] = getTime()
+           sendToAddr(RTTmessage, addr, "Round Trip Request");
+       }
 
-     func handleRTT() {
+       func handleRTT() {
         go func () {
             for {
                 time.Sleep( time.Second)
@@ -216,18 +224,18 @@ func receiveConnections() chan _message {
 // ===================================== TIMING METHODS =====================================
 
         func getTime() time.Time {
-         return time.Now().Add(timeOffset);
-     }
+           return time.Now().Add(timeOffset);
+       }
 
 
 // =======================================  PUBLIC METHODS =======================================
 
-     func InitDistributedAssert(addr string, neighbours []string, processName string) {
-         address = addr;
-         neighbors = neighbours;
-         listen_address, err := net.ResolveUDPAddr("udp", address)
-         listener, err = net.ListenUDP("udp", listen_address)
-         if listener == nil {
+       func InitDistributedAssert(addr string, neighbours []string, processName string) {
+           address = addr;
+           neighbors = neighbours;
+           listen_address, err := net.ResolveUDPAddr("udp", address)
+           listener, err = net.ListenUDP("udp", listen_address)
+           if listener == nil {
             fmt.Println("Error could not listen on ", address)
             fmt.Println("Error: ", err)
             os.Exit(-1)
