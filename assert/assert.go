@@ -18,6 +18,9 @@ const (
     RTT_RETURN = iota
     ASSERT_REQUEST = iota
     ASSERT_RETURN = iota
+    TIME_REQUEST = iota
+    TIME_RETURN = iota
+    SYNC_REQUEST = iota
 )
 
 // ============================================ STRUCTS ============================================
@@ -54,7 +57,10 @@ var timeOffset = 0 * time.Second
 
 var roundNumber = 0;
 var roundNumberRTT = 0;
+var roundNumberTime = 0;
 var roundTripTime map[string]time.Time
+var syncClientTime map[string]time.Time
+var syncLocalTime map[string]time.Time
 var masterNode = false;
 
 // ========================================  HELPER METHODS ========================================
@@ -93,7 +99,7 @@ func sendToAddr(payload _message, addr string, logMessage string) {
     if debug {
         fmt.Println(logMessage)
         fmt.Printf("Attempting to send [MessageType: %d] to %s\n", 
-           payload.MessageType, address)
+         payload.MessageType, address)
     }
     capture.WriteToUDP(listener.WriteToUDP, LOG.PrepareSend(logMessage, payload), address)
 }
@@ -118,8 +124,8 @@ func receiveConnections() chan _message {
             }
             if debug {
                 fmt.Printf("Received message [MessageType: %d] from [%s]\n",
-                 incomingMessage.MessageType,
-                 addr)
+                   incomingMessage.MessageType,
+                   addr)
             }
             msg <- incomingMessage
         }
@@ -183,6 +189,28 @@ func receiveConnections() chan _message {
                         roundMap[message.RequestingNode] = returnedValuesCopy;
                     }
                     break;
+                case TIME_REQUEST:
+                    if (roundNumberTime <= message.RoundNumber) {
+                        roundNumberTime = message.RoundNumber;
+                        message.MessageType = TIME_RETURN;
+                        message.RequestingNode = address;
+                        message.MessageTime = getTime();
+                        sendToAddr(message, respondTo, "Round Trip Response")
+                    }
+                    break;
+                case TIME_RETURN:
+                    if (roundNumberTime == message.RoundNumber) {
+                        syncClientTime[message.RequestingNode] = roundTripTime[message.RequestingNode]
+                        syncLocalTime[message.RequestingNode] = time.Time{}.Add(syncLocalTime[message.RequestingNode].Add(getTime().Sub(time.Time{})).Sub(time.Time{})/2)
+                    }
+                    break;
+                case SYNC_REQUEST:
+                    if (roundNumberTime <= message.RoundNumber) {
+                        roundNumberTime = message.RoundNumber;
+                        timeOffset = timeOffset + time.Duration(message.Result.(uint64))
+                        fmt.Printf("Time is: %v\n", getTime())
+                    }
+                    break;
                 default:
                     fmt.Printf("Error: unknown message type received [%d]\n", msg_type)
                 }
@@ -193,12 +221,12 @@ func receiveConnections() chan _message {
 // ===================================== RTT METHODS =====================================
 
         func getRTT(addr string) {
-           RTTmessage := _message{MessageType: RTT_REQUEST, RequestingNode:address, RoundNumber: roundNumberRTT};
-           roundTripTime[addr] = getTime()
-           sendToAddr(RTTmessage, addr, "Round Trip Request");
-       }
+         RTTmessage := _message{MessageType: RTT_REQUEST, RequestingNode:address, RoundNumber: roundNumberRTT};
+         roundTripTime[addr] = getTime()
+         sendToAddr(RTTmessage, addr, "Round Trip Request");
+     }
 
-       func handleRTT() {
+     func handleRTT() {
         go func () {
             for {
                 time.Sleep( time.Second)
@@ -224,18 +252,46 @@ func receiveConnections() chan _message {
 // ===================================== TIMING METHODS =====================================
 
         func getTime() time.Time {
-           return time.Now().Add(timeOffset);
-       }
+         return time.Now().Add(timeOffset);
+     }
+
+     func syncTime(addr string) {
+         RTTmessage := _message{MessageType: TIME_REQUEST, RequestingNode:address, RoundNumber: roundNumberTime};
+         syncLocalTime[addr] = getTime()
+         sendToAddr(RTTmessage, addr, "Get Time Request");
+     }
+
+     func sendDiffTime(addr string) {
+         RTTmessage := _message{MessageType: SYNC_REQUEST, RequestingNode:address, RoundNumber: roundNumberTime, Result: syncClientTime[addr].Sub(syncLocalTime[addr])};
+         sendToAddr(RTTmessage, addr, "Sync Time Request");
+     }
+
+     func handleTimeSync() {
+        go func () {
+            for {
+                time.Sleep(4*time.Second)
+                for _, v := range neighbors {
+                    delete(syncClientTime, v);
+                    syncTime(v);
+                }
+                time.Sleep(2*time.Second)
+                roundNumberTime++
+                for k, _ := range syncClientTime {
+                    sendDiffTime(k)
+                }
+            }
+            } ()
+        }
 
 
 // =======================================  PUBLIC METHODS =======================================
 
-       func InitDistributedAssert(addr string, neighbours []string, processName string) {
-           address = addr;
-           neighbors = neighbours;
-           listen_address, err := net.ResolveUDPAddr("udp", address)
-           listener, err = net.ListenUDP("udp", listen_address)
-           if listener == nil {
+        func InitDistributedAssert(addr string, neighbours []string, processName string) {
+         address = addr;
+         neighbors = neighbours;
+         listen_address, err := net.ResolveUDPAddr("udp", address)
+         listener, err = net.ListenUDP("udp", listen_address)
+         if listener == nil {
             fmt.Println("Error could not listen on ", address)
             fmt.Println("Error: ", err)
             os.Exit(-1)
@@ -254,12 +310,22 @@ func receiveConnections() chan _message {
 
         processData(message)
 
+        syncClientTime = make(map[string]time.Time)
+        syncLocalTime = make(map[string]time.Time)
         roundTripTime = make(map[string]time.Time)
         roundTripTimeMap = make(map[string]time.Duration)
         roundToResponseMap = make(map[int]*map[string]map[string]interface{})
 
+        lowest := true
         for _, v := range neighbours {
             roundTripTimeMap[v] = time.Second
+            if (v < addr) {
+                lowest = false
+            }
+        }
+
+        if (lowest) {
+            handleTimeSync();
         }
         handleRTT();
     }
