@@ -1,13 +1,13 @@
 package assert
 
 import (
-"fmt"
-"net"
-"os"
-"time"
-"reflect"
-"github.com/arcaneiceman/GoVector/capture"
-"github.com/arcaneiceman/GoVector/govec"
+    "fmt"
+    "net"
+    "os"
+    "time"
+    "reflect"
+    "github.com/arcaneiceman/GoVector/capture"
+    "github.com/arcaneiceman/GoVector/govec"
 )
 
 // ============================================= CONST =============================================
@@ -55,13 +55,13 @@ var timeOffset = 0 * time.Second
 
 // =======================================  HELPER VARIABLES =======================================
 
-var roundNumber = 0;
-var roundNumberRTT = 0;
-var roundNumberTime = 0;
+var roundNumber = 0
+var roundNumberRTT = 0
+var roundNumberTime = 0
 var roundTripTime map[string]time.Time
 var syncClientTime map[string]time.Time
 var syncLocalTime map[string]time.Time
-var masterNode = false;
+var masterNode = false
 
 // ========================================  HELPER METHODS ========================================
 
@@ -73,7 +73,7 @@ func checkResult(err error) {
 }
 
 func getValue(pointer interface{}) reflect.Value {
-    return reflect.ValueOf(pointer).Elem();
+    return reflect.ValueOf(pointer).Elem()
 }
 
 func B2S(bs []uint8) string {
@@ -120,7 +120,7 @@ func receiveConnections() chan _message {
             LOG.LogLocalEvent(logMessage)
             if err != nil {
                 fmt.Println("READ ERROR: ", err)
-                break;
+                break
             }
             if debug {
                 fmt.Printf("Received message [MessageType: %d] from [%s]\n",
@@ -129,238 +129,238 @@ func receiveConnections() chan _message {
             }
             msg <- incomingMessage
         }
-        }()
-        return msg
-    }
+    }()
+    return msg
+}
 
-    func handleAssert(msg _message) {
-        msg.MessageType = ASSERT_RETURN;
-        respondTo := msg.RequestingNode;
-        msg.RequestingNode = address;
-        requestedValues := msg.Result.([]interface{})
-        valMap := make(map[string]interface{})
-        time.Sleep(msg.MessageTime.Sub(getTime()))
-        for _, val := range requestedValues {
-            intArr := val.([]uint8)
-            v := B2S(intArr)
-            f, ok := assertableFunctions[v]
-            localVal := assertableDictionary[v];
-            if (ok && f != nil) {
-                localVal = f(localVal);
-            } 
-            valMap[v] = getValue(localVal);
-        }
-        msg.Result = valMap;
-        fmt.Println(reflect.TypeOf(msg.Result))
-        sendToAddr(msg, respondTo, "Assert Response")
+func handleAssert(msg _message) {
+    msg.MessageType = ASSERT_RETURN
+    respondTo := msg.RequestingNode
+    msg.RequestingNode = address
+    requestedValues := msg.Result.([]interface{})
+    valMap := make(map[string]interface{})
+    time.Sleep(msg.MessageTime.Sub(getTime()))
+    for _, val := range requestedValues {
+        intArr := val.([]uint8)
+        v := B2S(intArr)
+        f, ok := assertableFunctions[v]
+        localVal := assertableDictionary[v]
+        if (ok && f != nil) {
+            localVal = f(localVal)
+        } 
+        valMap[v] = getValue(localVal)
     }
+    msg.Result = valMap
+    fmt.Println(reflect.TypeOf(msg.Result))
+    sendToAddr(msg, respondTo, "Assert Response")
+}
 
-    func processData(message_chan chan _message){
-        go func() {
-            for {
-                message := <- message_chan
-                msg_type := message.MessageType
-                respondTo := message.RequestingNode;
+func processData(message_chan chan _message){
+    go func() {
+        for {
+            message := <- message_chan
+            msg_type := message.MessageType
+            respondTo := message.RequestingNode
 
             // Switch on the message type byte, each case should do it's own parsing with the buffer
-                switch msg_type {
+            switch msg_type {
                 case RTT_REQUEST:
-                    message.MessageType = RTT_RETURN;
-                    message.RequestingNode = address;
+                    message.MessageType = RTT_RETURN
+                    message.RequestingNode = address
                     sendToAddr(message, respondTo, "Round Trip Response")
-                    break;
+                    break
                 case RTT_RETURN:
                     if (roundNumberRTT == message.RoundNumber) {
                         roundTripTimeMap[message.RequestingNode] = getTime().Sub(roundTripTime[message.RequestingNode])
                     }
-                    break;
+                    break
                 case ASSERT_REQUEST:
                     go handleAssert(message)
-                    break;
+                    break
                 case ASSERT_RETURN:
-                    val, ok := roundToResponseMap[message.RoundNumber];
+                    val, ok := roundToResponseMap[message.RoundNumber]
                     if ok {
-                        roundMap := *val;
+                        roundMap := *val
                         returnedValues := message.Result.(map[interface{}]interface{})
                         returnedValuesCopy := make(map[string]interface{})
                         for k, v := range returnedValues {
                             returnedValuesCopy[k.(string)] = v
                         }
-                        roundMap[message.RequestingNode] = returnedValuesCopy;
+                        roundMap[message.RequestingNode] = returnedValuesCopy
                     }
-                    break;
+                    break
                 case TIME_REQUEST:
                     if (roundNumberTime <= message.RoundNumber) {
-                        roundNumberTime = message.RoundNumber;
-                        message.MessageType = TIME_RETURN;
-                        message.RequestingNode = address;
-                        message.MessageTime = getTime();
+                        roundNumberTime = message.RoundNumber
+                        message.MessageType = TIME_RETURN
+                        message.RequestingNode = address
+                        message.MessageTime = getTime()
                         sendToAddr(message, respondTo, "Round Trip Response")
                     }
-                    break;
+                    break
                 case TIME_RETURN:
                     if (roundNumberTime == message.RoundNumber) {
                         syncClientTime[message.RequestingNode] = roundTripTime[message.RequestingNode]
                         syncLocalTime[message.RequestingNode] = time.Time{}.Add(syncLocalTime[message.RequestingNode].Add(getTime().Sub(time.Time{})).Sub(time.Time{})/2)
                     }
-                    break;
+                    break
                 case SYNC_REQUEST:
                     if (roundNumberTime <= message.RoundNumber) {
-                        roundNumberTime = message.RoundNumber;
+                        roundNumberTime = message.RoundNumber
                         timeOffset = timeOffset + time.Duration(message.Result.(uint64))
                         fmt.Printf("Time is: %v\n", getTime())
                     }
-                    break;
+                    break
                 default:
                     fmt.Printf("Error: unknown message type received [%d]\n", msg_type)
-                }
             }
-            } ()
         }
+    } ()
+}
 
 // ===================================== RTT METHODS =====================================
 
-        func getRTT(addr string) {
-         RTTmessage := _message{MessageType: RTT_REQUEST, RequestingNode:address, RoundNumber: roundNumberRTT};
-         roundTripTime[addr] = getTime()
-         sendToAddr(RTTmessage, addr, "Round Trip Request");
-     }
+func getRTT(addr string) {
+    RTTmessage := _message{MessageType: RTT_REQUEST, RequestingNode:address, RoundNumber: roundNumberRTT}
+    roundTripTime[addr] = getTime()
+    sendToAddr(RTTmessage, addr, "Round Trip Request")
+}
 
-     func handleRTT() {
-        go func () {
-            for {
-                time.Sleep( time.Second)
-                roundNumberRTT++
-                for _, v := range neighbors {
-                    getRTT(v);
-                }
+func handleRTT() {
+    go func () {
+        for {
+            time.Sleep( time.Second)
+            roundNumberRTT++
+            for _, v := range neighbors {
+                getRTT(v)
             }
-            } ()
         }
+    } ()
+}
 
-        func getAssertDelay() time.Duration {
-            duration := 0 * time.Second;
-            for _, v := range roundTripTimeMap {
-                if (v > duration) {
-                    duration = v;
-                }
-            }
-            return duration + 50 * time.Millisecond
+func getAssertDelay() time.Duration {
+    duration := 0 * time.Second
+    for _, v := range roundTripTimeMap {
+        if (v > duration) {
+            duration = v
         }
+    }
+    return duration + 50 * time.Millisecond
+}
 
 
 // ===================================== TIMING METHODS =====================================
 
-        func getTime() time.Time {
-         return time.Now().Add(timeOffset);
-     }
+func getTime() time.Time {
+    return time.Now().Add(timeOffset)
+}
 
-     func syncTime(addr string) {
-         RTTmessage := _message{MessageType: TIME_REQUEST, RequestingNode:address, RoundNumber: roundNumberTime};
-         syncLocalTime[addr] = getTime()
-         sendToAddr(RTTmessage, addr, "Get Time Request");
-     }
+func syncTime(addr string) {
+    RTTmessage := _message{MessageType: TIME_REQUEST, RequestingNode:address, RoundNumber: roundNumberTime}
+    syncLocalTime[addr] = getTime()
+    sendToAddr(RTTmessage, addr, "Get Time Request")
+}
 
-     func sendDiffTime(addr string) {
-         RTTmessage := _message{MessageType: SYNC_REQUEST, RequestingNode:address, RoundNumber: roundNumberTime, Result: syncClientTime[addr].Sub(syncLocalTime[addr])};
-         sendToAddr(RTTmessage, addr, "Sync Time Request");
-     }
+func sendDiffTime(addr string) {
+    RTTmessage := _message{MessageType: SYNC_REQUEST, RequestingNode:address, RoundNumber: roundNumberTime, Result: syncClientTime[addr].Sub(syncLocalTime[addr])}
+    sendToAddr(RTTmessage, addr, "Sync Time Request")
+}
 
-     func handleTimeSync() {
-        go func () {
-            for {
-                time.Sleep(4*time.Second)
-                for _, v := range neighbors {
-                    delete(syncClientTime, v);
-                    syncTime(v);
-                }
-                time.Sleep(2*time.Second)
-                roundNumberTime++
-                for k, _ := range syncClientTime {
-                    sendDiffTime(k)
-                }
+func handleTimeSync() {
+    go func () {
+        for {
+            time.Sleep(4*time.Second)
+            for _, v := range neighbors {
+                delete(syncClientTime, v)
+                syncTime(v)
             }
-            } ()
+            time.Sleep(2*time.Second)
+            roundNumberTime++
+            for k, _ := range syncClientTime {
+                sendDiffTime(k)
+            }
         }
+    } ()
+}
 
 
 // =======================================  PUBLIC METHODS =======================================
 
-        func InitDistributedAssert(addr string, neighbours []string, processName string) {
-         address = addr;
-         neighbors = neighbours;
-         listen_address, err := net.ResolveUDPAddr("udp", address)
-         listener, err = net.ListenUDP("udp", listen_address)
-         if listener == nil {
-            fmt.Println("Error could not listen on ", address)
-            fmt.Println("Error: ", err)
-            os.Exit(-1)
-        }
-
-        LOG = govec.Initialize(processName, "logfile")
-
-        assertableDictionary = make(map[string]interface{});
-        assertableFunctions = make(map[string]func(interface{})interface{});
-
-        message := receiveConnections()
-
-        if debug {
-            fmt.Println("Calling process data")
-        }
-
-        processData(message)
-
-        syncClientTime = make(map[string]time.Time)
-        syncLocalTime = make(map[string]time.Time)
-        roundTripTime = make(map[string]time.Time)
-        roundTripTimeMap = make(map[string]time.Duration)
-        roundToResponseMap = make(map[int]*map[string]map[string]interface{})
-
-        lowest := true
-        for _, v := range neighbours {
-            roundTripTimeMap[v] = time.Second
-            if (v < addr) {
-                lowest = false
-            }
-        }
-
-        if (lowest) {
-            handleTimeSync();
-        }
-        handleRTT();
+func InitDistributedAssert(addr string, neighbours []string, processName string) {
+    address = addr
+    neighbors = neighbours
+    listen_address, err := net.ResolveUDPAddr("udp", address)
+    listener, err = net.ListenUDP("udp", listen_address)
+    if listener == nil {
+        fmt.Println("Error could not listen on ", address)
+        fmt.Println("Error: ", err)
+        os.Exit(-1)
     }
 
-    func AddAssertable(name string, pointer interface{}, f processFunction) {
-        if (reflect.TypeOf(pointer).Kind() != reflect.Ptr) {
-            fmt.Printf("Error: Tried adding %s as variable, did not pass pointer!\n", name)
-            os.Exit(-1)
-        }
-        assertableDictionary[name] = pointer;
-        assertableFunctions[name] = f;
-        fmt.Printf("%s %s: %v\n", address, name, getValue(pointer))
+    LOG = govec.Initialize(processName, "logfile")
+
+    assertableDictionary = make(map[string]interface{})
+    assertableFunctions = make(map[string]func(interface{})interface{})
+
+    message := receiveConnections()
+
+    if debug {
+        fmt.Println("Calling process data")
     }
 
-    func Assert(outerFunc func(map[string]map[string]interface{})bool, requestedValues map[string][]string) {
-        f := assertionFunction(outerFunc);
-        localRoundNumber := roundNumber;
-        roundNumber++;
+    processData(message)
 
-        maxRTT := getAssertDelay();
-        responseMap := make(map[string]map[string]interface{});
-        roundToResponseMap[localRoundNumber] = &responseMap;
+    syncClientTime = make(map[string]time.Time)
+    syncLocalTime = make(map[string]time.Time)
+    roundTripTime = make(map[string]time.Time)
+    roundTripTimeMap = make(map[string]time.Duration)
+    roundToResponseMap = make(map[int]*map[string]map[string]interface{})
 
-        assertTime := getTime();
-        assertTime = assertTime.Add(maxRTT);
-        for k, v := range requestedValues {
-            AssertRequestMessage :=  _message{MessageType: ASSERT_REQUEST, RequestingNode: address, RoundNumber: localRoundNumber, MessageTime: assertTime, Result: v};
-            go sendToAddr(AssertRequestMessage, k, "Requesting Assertion")
-        }
-
-        time.Sleep(2*maxRTT);
-        delete(roundToResponseMap, localRoundNumber);
-
-        if (!f(responseMap)) {
-            fmt.Println("ASSERTION FAILED: ", responseMap)
-            os.Exit(-1)
+    lowest := true
+    for _, v := range neighbours {
+        roundTripTimeMap[v] = time.Second
+        if (v < addr) {
+            lowest = false
         }
     }
+
+    if (lowest) {
+        handleTimeSync()
+    }
+    handleRTT()
+}
+
+func AddAssertable(name string, pointer interface{}, f processFunction) {
+    if (reflect.TypeOf(pointer).Kind() != reflect.Ptr) {
+        fmt.Printf("Error: Tried adding %s as variable, did not pass pointer!\n", name)
+        os.Exit(-1)
+    }
+    assertableDictionary[name] = pointer
+    assertableFunctions[name] = f
+    fmt.Printf("%s %s: %v\n", address, name, getValue(pointer))
+}
+
+func Assert(outerFunc func(map[string]map[string]interface{})bool, requestedValues map[string][]string) {
+    f := assertionFunction(outerFunc)
+    localRoundNumber := roundNumber
+    roundNumber++
+
+    maxRTT := getAssertDelay()
+    responseMap := make(map[string]map[string]interface{})
+    roundToResponseMap[localRoundNumber] = &responseMap
+
+    assertTime := getTime()
+    assertTime = assertTime.Add(maxRTT)
+    for k, v := range requestedValues {
+        AssertRequestMessage :=  _message{MessageType: ASSERT_REQUEST, RequestingNode: address, RoundNumber: localRoundNumber, MessageTime: assertTime, Result: v}
+        go sendToAddr(AssertRequestMessage, k, "Requesting Assertion")
+    }
+
+    time.Sleep(2*maxRTT)
+    delete(roundToResponseMap, localRoundNumber)
+
+    if (!f(responseMap)) {
+        fmt.Println("ASSERTION FAILED: ", responseMap)
+        os.Exit(-1)
+    }
+}
