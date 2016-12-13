@@ -7,7 +7,7 @@ import (
 	"math/rand"
 	"net"
 	"os"
-    "DistributedAsserts/assert"
+    "github.com/acarb95/DistributedAsserts/assert"
 )
 
 const (
@@ -17,8 +17,12 @@ const (
 
 var n int
 var m int
+var id          int                  //Id of this host
+var hosts       int                  //number of hosts in the group
+var neighbors = []string{}
+const BASEPORT = 10000
 
-func assertValue(values map[string][string]int) bool {
+func assertValue(values map[string]map[string]interface{}) bool {
 	return true;
 }
 
@@ -40,8 +44,16 @@ func main() {
 			fmt.Printf("[CLIENT] %s", err.Error())
 			continue
 		}
-		requestedValues := map[string][]string;
-		assert.Assert(assertValue, )
+
+		// Add requested value for current program, then for every other neighbor
+		requestedValues := make(map[string][]string)
+		requestedValues[":"+fmt.Sprintf("%d", BASEPORT+id+2*hosts)] = append(requestedValues[":"+fmt.Sprintf("%d", BASEPORT+id+2*hosts)], "inCritical")
+		for _, v := range neighbors {
+			requestedValues[v] = append(requestedValues[v], "inCritical")
+		}
+
+		// Assert on those requested things. 
+		assert.Assert(assertValue, requestedValues)
 		fmt.Printf("[CLIENT] %d/%d: %d + %d = %d\n", t, RUNS, n, m, sum)
 	}
 	fmt.Println()

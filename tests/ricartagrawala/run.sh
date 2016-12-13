@@ -7,7 +7,7 @@ HOSTS=5
 SLEEPTIME=20
 
 DINV=$GOPATH/src/bitbucket.org/bestchai/dinv
-testDir=$DINV/examples/ricartagrawala
+testDir=~/go_workspace/src/github.com/acarb95/DistributedAsserts/tests/ricartagrawala
 #ricart-agrawala test cases
 function shutdown {
     kill `ps | pgrep ricart | awk '{print $1}'` > /dev/null
@@ -84,8 +84,8 @@ then
     exit
 fi
 runTest
-runLogMerger
-runDaikon
+# runLogMerger
+# runDaikon
 if [ "$1" == "-d" ];
 then
     exit

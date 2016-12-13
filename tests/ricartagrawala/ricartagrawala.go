@@ -1,4 +1,5 @@
-package main
+package ricartagrawala
+// package main
 
 import (
 	"bitbucket.org/bestchai/dinv/dinvRT"
@@ -12,7 +13,8 @@ import (
 	"math/rand"
 	"net"
 	"time"
-    "DistributedAsserts/assert"
+	
+    // "github.com/acarb95/DistributedAsserts/assert"
 )
 
 const BASEPORT = 10000
@@ -73,8 +75,8 @@ func (r Report) ReportMatchesPlan(p Plan) bool {
 }
 func assertValue(values map[string]map[string]interface{}) bool {
 	crit := false
-	for k, v := range values {
-		fmt.Println("%s: %t\n", k, v["inCritical"].(bool))
+	for _, v := range values {
+		// fmt.Printf("%s: %t\n", k, v["inCritical"].(bool))
 		if v["inCritical"].(bool) {
 			if (crit) {
 				return false
@@ -89,16 +91,20 @@ func critical() {
 	inCritical = true
 	dinvRT.Track(fmt.Sprintf("%dC", plan.Id), "crictical", inCritical)
 
-	requestedValues := make(map[string][]string);
-	requestedValues[":"+fmt.Sprintf("%d", BASEPORT+id+2*hosts)] = append(requestedValues[":"+fmt.Sprintf("%d", BASEPORT+id+2*hosts)], "inCritical")
-	for _, v := range neighbors {
-		requestedValues[v] = append(requestedValues[v], "inCritical")
-	}
-   		//fmt.Printf("n = %d, m = %d, &n = %v, &m = %v\n", n, m, &n, &m);
-	assert.Assert(assertValue, requestedValues)
+	// ============================== ASSERT CODE ==============================
+	// requestedValues := make(map[string][]string);
+	// requestedValues[":"+fmt.Sprintf("%d", BASEPORT+id+2*hosts)] = append(requestedValues[":"+fmt.Sprintf("%d", BASEPORT+id+2*hosts)], "inCritical")
+	// for _, v := range neighbors {
+	// 	requestedValues[v] = append(requestedValues[v], "inCritical")
+	// }
+	// assert.Assert(assertValue, requestedValues)
+	// ============================ END ASSERT CODE ============================
+
 	
 	report.Criticals++
-	fmt.Printf("Running Critical Section on %d, run(%d/%d)  with Request time:%d \n", id, report.Criticals, plan.Criticals, RequestTime)
+	// fmt.Printf("Running Critical Section on %d, run(%d/%d)  with Request time:%d \n", id, report.Criticals, plan.Criticals, RequestTime)
+	// time.Sleep(time.Duration(10)*time.Millisecond)
+	inCritical = false // Remove to induce assertion failure
 }
 
 var (
@@ -107,10 +113,10 @@ var (
 	timeInput  int
 )
 
-	var neighbors = []string{}
+var neighbors = []string{}
 
 func main() {
-	fmt.Println("STARTING")
+	// fmt.Println("STARTING")
 	var idarg = flag.Int("id", 0, "hosts id")
 	var hostsarg = flag.Int("hosts", 0, "#of hosts")
 	var timearg = flag.Int("time", 0, "timeout")
@@ -119,13 +125,13 @@ func main() {
 	hostsInput = *hostsarg
 	timeInput = *timearg
 	plan := Plan{idInput, 10, timeInput}
-	fmt.Println(plan.Criticals)
+	// fmt.Println(plan.Criticals)
 	report := Host(idInput, hostsInput, plan)
 	if !report.ReportMatchesPlan(plan) {
-		fmt.Println("FAILED")
+		// fmt.Println("FAILED")
 
 	} else {
-		fmt.Println("PASSED")
+		// fmt.Println("PASSED")
 	}
 }
 
@@ -134,9 +140,9 @@ func Host(idArg, hostsArg int, planArg Plan) Report {
 	hosts = hostsArg
 	plan = planArg
 	startTime = time.Now()
-	fmt.Printf("Starting %d with plan to execute crit %d times\n", id+BASEPORT, planArg.Criticals)
+	// fmt.Printf("Starting %d with plan to execute crit %d times\n", id+BASEPORT, planArg.Criticals)
 	initConnections(id, hosts)
-	fmt.Printf("Connected to %d hosts on %d\n", len(nodes), id)
+	// fmt.Printf("Connected to %d hosts on %d\n", len(nodes), id)
 	time.Sleep(1000 * time.Millisecond)
 
 	//start the receving demon
@@ -157,12 +163,12 @@ func Host(idArg, hostsArg int, planArg Plan) Report {
 
 		//exit if the job is done, and everyone else is done too
 		if len(done) >= hosts && len(okays) >= (hosts-1) {
-			fmt.Printf("Host %d done\n", plan.Id)
+			// fmt.Printf("Host %d done\n", plan.Id)
 			break
 		} else if finishing && timeouts > 10 {
 			break
 		} else if startTime.Add(time.Second * time.Duration(plan.GlobalTimeout)).Before(time.Now()) {
-			fmt.Printf("TIMEOUT")
+			// fmt.Printf("TIMEOUT\n")
 			break
 		}
 
@@ -210,7 +216,7 @@ func Host(idArg, hostsArg int, planArg Plan) Report {
 			break
 		}
 	}
-	fmt.Printf("exiting")
+	// fmt.Printf("exiting")
 	return report
 }
 
@@ -231,7 +237,7 @@ func checkUpdates(crit, finishing bool, timeouts *int, sentTime *time.Time, okay
 				}
 			}
 			trues += "]"
-			fmt.Println(trues)
+			// fmt.Println(trues)
 
 			break
 		case "critical":
@@ -315,7 +321,7 @@ func receive() {
 }
 
 func broadcast(msg string) {
-	fmt.Printf("broadcasting %s\n", msg)
+	// fmt.Printf("broadcasting %s\n", msg)
 	for i := range nodes {
 		send(msg, i)
 	}
@@ -358,12 +364,16 @@ func initConnections(id, hosts int) {
 		} else {
 			nodes[i], err = net.ResolveUDPAddr("udp4", ":"+fmt.Sprintf("%d", BASEPORT+i))
 			neighbors = append(neighbors,":"+fmt.Sprintf("%d", BASEPORT+i+2*hosts))
-			fmt.Println(nodes[i])
+			// fmt.Println(nodes[i])
 			crashGracefully(err)
 		}
 	}
-	assert.InitDistributedAssert(":"+fmt.Sprintf("%d", BASEPORT+id+2*hosts), neighbors, "client");
-	assert.AddAssertable("inCritical", &inCritical, nil);
+
+	// ============================== ASSERT CODE ==============================
+	// processName := fmt.Sprintf("node%d", id)
+	// assert.InitDistributedAssert(":"+fmt.Sprintf("%d", BASEPORT+id+2*hosts), neighbors, processName);
+	// assert.AddAssertable("inCritical", &inCritical, nil);
+	// ============================ END ASSERT CODE ============================
 }
 
 func crashGracefully(err error) {
@@ -375,7 +385,7 @@ func crashGracefully(err error) {
 		fmt.Println(err)
 		report.ErrorMessage = err
 		report.Crashed = true
-		fmt.Printf("broadcasting death on %d\n", id)
+		// fmt.Printf("broadcasting death on %d\n", id)
 		broadcast("death")
 	}
 }

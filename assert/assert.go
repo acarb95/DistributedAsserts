@@ -21,6 +21,7 @@ const (
     TIME_REQUEST = iota
     TIME_RETURN = iota
     SYNC_REQUEST = iota
+    ASSERT_FAILED = iota
 )
 
 // ============================================ STRUCTS ============================================
@@ -50,7 +51,7 @@ var roundTripTimeMap map[string]time.Duration
 var timingFunction func()time.Time
 var rttFunction func(string)time.Duration
 var LOG *govec.GoLog
-var debug = true
+var debug = false
 var timeOffset = 0 * time.Second
 
 // =======================================  HELPER VARIABLES =======================================
@@ -151,7 +152,7 @@ func handleAssert(msg _message) {
         valMap[v] = getValue(localVal)
     }
     msg.Result = valMap
-    fmt.Println(reflect.TypeOf(msg.Result))
+    // fmt.Println(reflect.TypeOf(msg.Result))
     sendToAddr(msg, respondTo, "Assert Response")
 }
 
@@ -208,9 +209,13 @@ func processData(message_chan chan _message){
                     if (roundNumberTime <= message.RoundNumber) {
                         roundNumberTime = message.RoundNumber
                         timeOffset = timeOffset + time.Duration(message.Result.(uint64))
-                        fmt.Printf("Time is: %v\n", getTime())
+                        // fmt.Printf("Time is: %v\n", getTime())
                     }
                     break
+                case ASSERT_FAILED:
+                    // fmt.Println("ASSERTION FAILED")
+                    // time.Sleep(time.Second)
+                    os.Exit(-1)
                 default:
                     fmt.Printf("Error: unknown message type received [%d]\n", msg_type)
             }
@@ -289,15 +294,16 @@ func handleTimeSync() {
 func InitDistributedAssert(addr string, neighbours []string, processName string) {
     address = addr
     neighbors = neighbours
-    listen_address, err := net.ResolveUDPAddr("udp", address)
-    listener, err = net.ListenUDP("udp", listen_address)
+    listen_address, err := net.ResolveUDPAddr("udp4", address)
+    // fmt.Println("Listening on address: ", address)
+    listener, err = net.ListenUDP("udp4", listen_address)
     if listener == nil {
         fmt.Println("Error could not listen on ", address)
         fmt.Println("Error: ", err)
         os.Exit(-1)
     }
 
-    LOG = govec.Initialize(processName, "logfile")
+    LOG = govec.Initialize(processName, processName)
 
     assertableDictionary = make(map[string]interface{})
     assertableFunctions = make(map[string]func(interface{})interface{})
@@ -337,7 +343,7 @@ func AddAssertable(name string, pointer interface{}, f processFunction) {
     }
     assertableDictionary[name] = pointer
     assertableFunctions[name] = f
-    fmt.Printf("%s %s: %v\n", address, name, getValue(pointer))
+    // fmt.Printf("%s %s: %v\n", address, name, getValue(pointer))
 }
 
 func Assert(outerFunc func(map[string]map[string]interface{})bool, requestedValues map[string][]string) {
@@ -360,7 +366,16 @@ func Assert(outerFunc func(map[string]map[string]interface{})bool, requestedValu
     delete(roundToResponseMap, localRoundNumber)
 
     if (!f(responseMap)) {
-        fmt.Println("ASSERTION FAILED: ", responseMap)
+        // fmt.Println("ASSERTION FAILED: ", responseMap)
+        for k, _ := range requestedValues {
+            AssertFailedMessage := _message{MessageType: ASSERT_FAILED, RequestingNode: address, RoundNumber: localRoundNumber, MessageTime: assertTime}
+            // fmt.Println("Attempting to send fail message")
+            sendToAddr(AssertFailedMessage, k, "Assertion Failed")
+        }
+        time.Sleep(maxRTT) //+ time.Millisecond*maxRTT)
         os.Exit(-1)
+    } else {
+        message := fmt.Sprintf("ASSERTION PASSED: %#+v", responseMap)
+        LOG.LogLocalEvent(message)
     }
 }

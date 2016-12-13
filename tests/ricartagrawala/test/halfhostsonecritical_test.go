@@ -1,7 +1,7 @@
 package ricartagrawala_test
 
 import (
-	"bitbucket.org/bestchai/dinv/examples/ricartagrawala"
+	"github.com/acarb95/DistributedAsserts/tests/ricartagrawala"
 	"flag"
 	"fmt"
 	"testing"

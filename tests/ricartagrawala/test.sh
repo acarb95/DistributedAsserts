@@ -4,7 +4,7 @@ HOSTS=3
 SLEEPTIME=20
 
 DINV=$GOPATH/src/bitbucket.org/bestchai/dinv
-testDir=$DINV/examples/ricartagrawala
+testDir=~/go_workspace/src/github.com/acarb95/DistributedAsserts/tests/ricartagrawala
 #ricart-agrawala test cases
 function shutdown {
     kill `ps | pgrep ricart | awk '{print $1}'` > /dev/null
@@ -12,7 +12,7 @@ function shutdown {
 
 function install {
     echo "installing dinv"
-    cd ~/go/src/bitbucket.org/bestchai/dinv
+    cd ~/go_workspace/src/bitbucket.org/bestchai/dinv
     sudo -E go install 
 }
 
@@ -60,22 +60,22 @@ function runOneMutant {
 function testWrapper {
     echo testing $1
     echo testing $1 >> passfail.stext
-    runTest $1 $2 $3
-    mkdir $1-txt
-    mv *.txt $1-txt
-    shutdown
+    runTest $1.go $2 $3
+    mkdir $1-results
+    mv *.txt $1-results
+    # shutdown
 }
 
 
 function runTests {
-    cd $testdir/test
-    #testWrapper "hoststartup_test.go" $HOSTS $SLEEPTIME
-    #testWrapper "onehostonecritical_test.go" $HOSTS $SLEEPTIME
-    #testWrapper "onehostmanycritical_test.go" $HOSTS $SLEEPTIME
-    #testWrapper "allhostsonecritical_test.go" $HOSTS $SLEEPTIME
-    testWrapper "allhostsmanycriticals_test.go" $HOSTS $SLEEPTIME
-    #testWrapper "halfhostsonecritical_test.go" $HOSTS $SLEEPTIME
-    #testWrapper "halfhostsmanycriticals_test.go" $HOSTS $SLEEPTIME
+    cd $testDir/test
+    # testWrapper "hoststartup_test" $HOSTS $SLEEPTIME
+    # testWrapper "onehostonecritical_test" $HOSTS $SLEEPTIME
+    # testWrapper "onehostmanycritical_test" $HOSTS $SLEEPTIME
+    # testWrapper "allhostsonecritical_test" $HOSTS $SLEEPTIME
+    testWrapper "allhostsmanycriticals_test" $HOSTS $SLEEPTIME
+    # testWrapper "halfhostsonecritical_test" $HOSTS $SLEEPTIME
+    # testWrapper "halfhostsmanycriticals_test" $HOSTS $SLEEPTIME
 }
 
 function instrument {
@@ -84,17 +84,17 @@ function instrument {
 
 function runLogMerger {
     cd $testDir/test
-     for directory in ./*-txt; do
+     for directory in ./*-results; do
          echo $directory
          cd $directory
          #merging consistant cuts
          dinv -v -l *Encoded.txt *Log.txt
          mkdir dinv-output
-         mv *.dtrace dinv-output
+         mv *.trace dinv-output
          #regualr daikon output
          dinv -l -plan=NONE *Encoded.txt *Log.txt 
          mkdir daikon-output
-         mv *.dtrace daikon-output
+         mv *.trace daikon-output
          cd ..
      done
 }
@@ -102,7 +102,7 @@ function runLogMerger {
 function sortOutput {
     cd $testDir/test
         let "i = 0"
-        for directory in ./*-txt; do
+        for directory in ./*-results; do
             #sort dinv's output
             cd $directory/dinv-output
             for file in ./*; do
@@ -112,7 +112,7 @@ function sortOutput {
                     mkdir ../../dinv-$cleanName
                 fi
 
-                mv $file ../../dinv-$cleanName/$i.dtrace
+                mv $file ../../dinv-$cleanName/$i.trace
                 let "i = i + 1"
             
             done
@@ -127,7 +127,7 @@ function sortOutput {
                     mkdir ../../daikon-$cleanName
                 fi
 
-                mv $file ../../daikon-$cleanName/$i.dtrace
+                mv $file ../../daikon-$cleanName/$i.trace
                 let "i = i + 1"
             
             done
@@ -165,21 +165,25 @@ function runDaikon {
 function cleanup {
     cd $testDir/test
     movelogs
-    rm *.stext
+    mv *.stext old/
+    # rm -rf *-results/
 }    
 
 function movelogs {
-    cd $testDir/test
-    shopt -s nullglob
-    set -- *[gd].txt
-    if [ "$#" -gt 0 ]
-    then
-        name=`date "+%m-%d-%y-%s"`
-        mkdir old/$name
-        mv *[gd].txt ../old/$name
-        mv *.dtrace ../old/$name
-        mv *.gz ../old/$name
-    fi
+    mkdir old
+    rm -rf old/*-results
+    mv *-results/ old
+    # cd $testDir/test
+    # shopt -s nullglob
+    # set -- *[gd].txt
+    # if [ "$#" -gt 0 ]
+    # then
+    #     name=`date "+%m-%d-%y-%s"`
+    #     mkdir old/$name
+    #     mv *[gd].txt ../old/$name
+    #     mv *.trace ../old/$name
+    #     mv *.gz ../old/$name
+    # fi
 }
 
 
@@ -188,9 +192,9 @@ then
     cleanup
     exit
 fi
-install
+#install
 runTests
-runLogMerger
+# runLogMerger
 #sortOutput
 #runDaikon
 if [ "$1" == "-d" ];
