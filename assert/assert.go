@@ -243,7 +243,7 @@ func handleRTT() {
     } ()
 }
 
-func getAssertDelay() time.Duration {
+func GetAssertDelay() time.Duration {
     duration := 0 * time.Second
     for _, v := range roundTripTimeMap {
         if (v > duration) {
@@ -351,7 +351,7 @@ func Assert(outerFunc func(map[string]map[string]interface{})bool, requestedValu
     localRoundNumber := roundNumber
     roundNumber++
 
-    maxRTT := getAssertDelay()
+    maxRTT := GetAssertDelay()
     responseMap := make(map[string]map[string]interface{})
     roundToResponseMap[localRoundNumber] = &responseMap
 

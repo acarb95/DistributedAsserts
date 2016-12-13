@@ -8,38 +8,71 @@ import (
 	"net"
 	"os"
     "github.com/acarb95/DistributedAsserts/assert"
+    "time"
 )
 
 const (
 	LARGEST_TERM = 100
-	RUNS         = 500
+	RUNS         = 5//00
 )
 
-var n int
-var m int
-var id          int                  //Id of this host
-var hosts       int                  //number of hosts in the group
-var neighbors = []string{}
-const BASEPORT = 10000
+var n int64
+var m int64
+var sum int64
+
+var client_assert_addr = ":18589"
+var server_assert_addr = ":9099"
 
 func assertValue(values map[string]map[string]interface{}) bool {
-	return true;
+	// TODO: could add server sum to this, but it does show that not 
+	// 		all assertable variables need to be in the assertion.
+
+	// for k, v := range values {
+	// 	fmt.Printf("%s: [", k)
+	// 	for k2, v2 := range v {
+	// 		fmt.Printf("%s: %v, ", k2, v2)
+	// 	}
+	// 	fmt.Printf("]\n")
+	// }
+
+	int_a := values[server_assert_addr]["a"].(int64)
+	int_b := values[server_assert_addr]["b"].(int64)
+	int_n := values[client_assert_addr]["n"].(int64)
+	int_m := values[client_assert_addr]["m"].(int64)
+	int_sum := values[client_assert_addr]["sum"].(int64)
+
+	if (int_n != int_a) && (int_n != int_b) {
+		fmt.Println("ASSERTION FAILURE: client n does not match server a or b.")
+		fmt.Printf("\tn: %d, a: %d, b: %d\n", int_n, int_a, int_b)
+		return false
+	} else if (int_m != int_a) && (int_m != int_b) {
+	  	fmt.Println("ASSERTION FAILURE: client n does not match server a or b.")
+		fmt.Printf("\tm: %d, a: %d, b: %d\n", int_m, int_a, int_b)
+		return false
+	} else if int_sum != (int_m + int_n) {
+		fmt.Println("ASSERTION FAILURE: sum does not match n + m.")
+		fmt.Printf("\tsum: %d, n: %d, m: %d\n", int_sum, int_n, int_m)
+		return false
+	} else {
+		return true
+	}
 }
 
 func main() {
-	assert.InitDistributedAssert(":18589", []string{":9099"}, "client");
+	assert.InitDistributedAssert(client_assert_addr, []string{server_assert_addr}, "client");
 	assert.AddAssertable("n", &n, nil);
 	assert.AddAssertable("m", &m, nil);
+	assert.AddAssertable("sum", &sum, nil)
 	localAddr, err := net.ResolveUDPAddr("udp4", ":18585")
 	printErrAndExit(err)
 	remoteAddr, err := net.ResolveUDPAddr("udp4", ":9090")
 	printErrAndExit(err)
-	conn, err := net.DialUDP("udp", localAddr, remoteAddr)
+	conn, err := net.DialUDP("udp4", localAddr, remoteAddr)
 	printErrAndExit(err)
 
 	for t := 1; t <= RUNS; t++ {
-		n, m := rand.Int()%LARGEST_TERM, rand.Int()%LARGEST_TERM
-		sum, err := reqSum(conn, n, m)
+		n, m = int64(rand.Int()%LARGEST_TERM), int64(rand.Int()%LARGEST_TERM)
+		sum, err = reqSum(conn, n, m)
 		if err != nil {
 			fmt.Printf("[CLIENT] %s", err.Error())
 			continue
@@ -47,28 +80,30 @@ func main() {
 
 		// Add requested value for current program, then for every other neighbor
 		requestedValues := make(map[string][]string)
-		requestedValues[":"+fmt.Sprintf("%d", BASEPORT+id+2*hosts)] = append(requestedValues[":"+fmt.Sprintf("%d", BASEPORT+id+2*hosts)], "inCritical")
-		for _, v := range neighbors {
-			requestedValues[v] = append(requestedValues[v], "inCritical")
-		}
+		requestedValues[client_assert_addr] = append(requestedValues[client_assert_addr], "n")
+		requestedValues[client_assert_addr] = append(requestedValues[client_assert_addr], "m")
+		requestedValues[client_assert_addr] = append(requestedValues[client_assert_addr], "sum")
+
+		requestedValues[server_assert_addr] = append(requestedValues[server_assert_addr], "a")
+		requestedValues[server_assert_addr] = append(requestedValues[server_assert_addr], "b")
 
 		// Assert on those requested things. 
 		assert.Assert(assertValue, requestedValues)
+		time.Sleep(assert.GetAssertDelay()*2)
 		fmt.Printf("[CLIENT] %d/%d: %d + %d = %d\n", t, RUNS, n, m, sum)
 	}
 	fmt.Println()
 	os.Exit(0)
 }
 
-func reqSum(conn *net.UDPConn, n, m int) (sum int64, err error) {
-	msg := make([]byte, 256)
-	binary.PutVarint(msg[:8], int64(n))
-	binary.PutVarint(msg[8:], int64(m))
-
-	fmt.Println(msg)
+func reqSum(conn *net.UDPConn, n, m int64) (sum int64, err error) {
+	msg := make([]byte, 32) // capture.Write adds to the buffer so this buffer size needs to be smaller than what is read on the server
+	binary.PutVarint(msg[:8], n)
+	binary.PutVarint(msg[8:], m)
 
 	// after instrumentation
-	_, err = capture.Write(conn.Write, msg[:])
+	_, err = capture.Write(conn.Write, msg)
+	// fmt.Println(written)
 	// _, err = conn.Write(msg)
 	if err != nil {
 		return
@@ -86,7 +121,7 @@ func reqSum(conn *net.UDPConn, n, m int) (sum int64, err error) {
 
 	sum, _ = binary.Varint(buf[0:])
 
-	fmt.Println(sum, buf)
+	// fmt.Println(sum, buf)
 
 	//@dump
 

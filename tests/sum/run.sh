@@ -8,10 +8,10 @@
 
 # The detected data invarients should include term1 + term2 = sum
 
-set -e
+# set -e
 
 # http://unix.stackexchange.com/a/145654
-exec &> >(tee -a "run.output")
+# exec &> >(tee -a "run.output")
 
 function fixModDir {
     if [ -d "$testDir/$1/"lib_orig ]; then
@@ -28,17 +28,17 @@ function runTestPrograms {
     killall server
 }
 
-pushd "$(dirname "$0")"
+# pushd "$(dirname "$0")"
 
-../lib.sh clean "failed"
-../lib.sh installDinv
+# ../lib.sh clean "failed"
+# ../lib.sh installDinv
 # GoVector -dir "client"
 # dinv -i -file "client/client.go"
 # GoVector -dir "server"
 # dinv -i -file "server/server.go"
 runTestPrograms
-../lib.sh runLogMerger
-../lib.sh runDaikon
-../lib.sh clean
+# ../lib.sh runLogMerger
+# ../lib.sh runDaikon
+# ../lib.sh clean
 
-popd
+# popd

@@ -67,7 +67,7 @@ function runLogMerger {
 
 function runDaikon {
     cd $testDir
-    for file in ./*.dtrace; do
+    for file in ./*.trace; do
         java daikon.Daikon $file
     done
     rm output.txt
@@ -80,7 +80,7 @@ function runDaikon {
 function cleanUp {
     fixModDir
     rm ./*.txt
-    rm ./*.dtrace
+    rm ./*.trace
     rm ./*.gz
     rm -r snapshots
     cd $testDir
