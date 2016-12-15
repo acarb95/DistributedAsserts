@@ -97,7 +97,11 @@ func critical() {
 	// for _, v := range neighbors {
 	// 	requestedValues[v] = append(requestedValues[v], "inCritical")
 	// }
+	// conversion := 1000000.0
+	// startTime := time.Nanoseconds()
 	// assert.Assert(assertValue, requestedValues)
+	// endTime := time.Nanoseconds()
+	// fmt.Printf("Assert Elapsed (ms): %.6f", (endTime - startTime)/conversion)
 	// ============================ END ASSERT CODE ============================
 
 	

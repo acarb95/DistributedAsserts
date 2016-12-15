@@ -8,7 +8,7 @@
 Hosts=5
 BasePort=4000
 DINV=$GOPATH/src/bitbucket.org/bestchai/dinv
-testDir=$DINV/examples/diningPhil
+testDir=$GOPATH/src/github.com/acarb95/DistributedAsserts/tests/diningPhilosophers
 P1=diningphilosopher.go
 Original=original
 
@@ -32,12 +32,13 @@ function runTestPrograms {
     pwd
     for (( i=0; i<Hosts; i++))
     do
+        echo $i
         let "hostPort=i + BasePort"
         let "neighbourPort= (i+1)%Hosts + BasePort"
         go run diningphilosopher.go -mP $hostPort -nP $neighbourPort &
     done
-    sleep 8
-    kill `ps | pgrep dining | awk '{print $1}'`
+    sleep 15
+    kill `ps | grep phil | awk '{print $1}'`
 }
 
 function runLogMerger {
@@ -78,7 +79,7 @@ function fixModDir {
 
 function cleanUp {
     cd $testDir
-    kill `ps | pgrep dining | awk '{print $1}'`
+    kill `ps | grep dining | awk '{print $1}'`
     fixModDir $P1
     rm ./*.dtrace
     rm ./*.gz
@@ -93,13 +94,8 @@ then
     cleanUp
     exit
 fi
-installDinv
-instrument $P1
+# installDinv
+# instrument $P1
 runTestPrograms
-runLogMerger
-time runDaikon
-if [ "$1" == "-d" ];
-then
-    exit
-fi
-cleanUp
+# runLogMerger
+# time runDaikon

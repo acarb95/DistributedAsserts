@@ -9,6 +9,9 @@ import (
 	"net"
 	"os"
 	"time"
+	"strconv"
+
+	"github.com/acarb95/DistributedAsserts/assert"
 )
 
 const (
@@ -30,6 +33,7 @@ var (
 	RightChopstick bool
 	Excused        bool
 	ID             string
+	neighbors = []string{}
 )
 
 //Transition into the eating state
@@ -44,7 +48,7 @@ func EatingState() {
 func ThinkingState() {
 	Eating = false
 	Thinking = true
-	LeftChopstick = false
+	LeftChopstick = true//false
 	RightChopstick = false
 }
 
@@ -62,6 +66,16 @@ func RightChopstickState() {
 	RightChopstick = true
 }
 
+func assertRightChopstick(values map[string]map[string]interface{}) bool {
+	id_int, _ := strconv.ParseInt(ID, 10, 0)
+	id_int = id_int + 150
+	// fmt.Printf("Checking %d and %s\n", id_int, neighbors[0])
+	if values[fmt.Sprintf(":%d", id_int)]["RightChopstick"] == true && values[neighbors[0]]["LeftChopstick"] == true {
+		return false
+	}
+	return true
+}
+
 //structure defining a philosopher
 type Philosopher struct {
 	id, neighbourId int
@@ -70,20 +84,21 @@ type Philosopher struct {
 }
 
 func makePhilosopher(port, neighbourPort int) *Philosopher {
-	fmt.Printf("Setting up listing connection on %d\n", port)
+	// fmt.Printf("Setting up listing connection on %d\n", port)
+	ID = fmt.Sprintf("%d", port)
 	conn, err := net.ListenPacket("udp", ":"+fmt.Sprintf("%d", port))
 	if err != nil {
 		panic(err)
 	}
 
 	//for general testing
-	if port == 4000 {
-		ID = fmt.Sprintf("%d", port)
-	} else {
-		ID = "ALL"
-	}
+	// if port == 4000 {
+	// 	ID = fmt.Sprintf("%d", port)
+	// } else {
+	// 	ID = "ALL"
+	// }
 
-	fmt.Printf("listening on %d\n", port)
+	// fmt.Printf("listening on %d\n", port)
 	var neighbour *net.UDPConn
 	var errDial error
 	connected := false
@@ -102,9 +117,9 @@ func makePhilosopher(port, neighbourPort int) *Philosopher {
 	//received
 	chopstick := make(chan bool, 1)
 	chopstick <- true
-	fmt.Printf("launching chopstick server\n")
+	// fmt.Printf("launching chopstick server\n")
 	go func() {
-		defer fmt.Printf("Chopstick #%d\n is down", port) //attempt to show when the chopsticks are no longer available
+		// defer fmt.Printf("Chopstick #%d\n is down", port) //attempt to show when the chopsticks are no longer available
 		//Incomming request handler
 		for true {
 			dinvRT.Track(fmt.Sprintf("%d", ID), "Excused,Ack,ReleaseStick,ExcuseMe,SLEEP_MAX,Eating,RightChopstick,n,BUFF_SIZE,Thinking,RequestStick,SIZEOFINT,LeftChopstick", Excused, Ack, ReleaseStick, ExcuseMe, SLEEP_MAX, Eating, RightChopstick, n, BUFF_SIZE, Thinking, RequestStick, SIZEOFINT, LeftChopstick)
@@ -112,24 +127,24 @@ func makePhilosopher(port, neighbourPort int) *Philosopher {
 			go func(request int) {
 				switch request {
 				case ReleaseStick:
-					fmt.Printf("Receiving stick on %d\n", port)
+					// fmt.Printf("Receiving stick on %d\n", port)
 					chopstick <- true
 				case RequestStick:
-					fmt.Printf("stick requested from %d\n", port)
+					// fmt.Printf("stick requested from %d\n", port)
 					<-chopstick
-					fmt.Printf("Giving stick on %d\n", port)
+					// fmt.Printf("Giving stick on %d\n", port)
 					resp := MarshallInts([]int{Ack})
 					capture.WriteTo(conn.WriteTo, resp, addr)
 				case ExcuseMe:
 					if !Excused {
-						fmt.Printf("%d has been excused from the table\n", port)
+						// fmt.Printf("%d has been excused from the table\n", port)
 					}
 					Excused = true
 				}
 			}(req)
 		}
 	}()
-	fmt.Printf("server launched")
+	// fmt.Printf("server launched")
 	return &Philosopher{port, neighbourPort, chopstick, neighbour}
 }
 
@@ -147,27 +162,29 @@ func getRequest(conn net.PacketConn) (int, net.Addr) {
 //Transition and print state, then sleep for a random amount of time
 func (phil *Philosopher) think() {
 	ThinkingState()
-	fmt.Printf("%d is thinking.\n", phil.id)
+	// ASSERT THINKING STATE
+	// fmt.Printf("%d is thinking.\n", phil.id)
 	time.Sleep(time.Duration(rand.Int63n(SLEEP_MAX)))
 }
 
 //Eat and then wait for a random amount of time
 func (phil *Philosopher) eat() {
 	EatingState()
-	fmt.Printf("%d is eating.\n", phil.id)
+	// ASSERT EATING STATE
+	// fmt.Printf("%d is eating.\n", phil.id)
 	time.Sleep(time.Duration(rand.Int63n(SLEEP_MAX)))
 }
 
 //Attemp to gain a chopstic from a neighbouring philosopher
 func (phil *Philosopher) getChopsticks() {
-	fmt.Printf("request chopstick %d -> %d\n", phil.id, phil.neighbourId)
+	// fmt.Printf("request chopstick %d -> %d\n", phil.id, phil.neighbourId)
 	timeout := make(chan bool, 1)
 	neighbourChopstick := make(chan bool, 1)
 	go func() { time.Sleep(time.Duration(SLEEP_MAX)); timeout <- true }()
 	<-phil.chopstick
 	LeftChopstickState()
 	//timeout function
-	fmt.Printf("%v got his chopstick.\n", phil.id)
+	// fmt.Printf("%v got his chopstick.\n", phil.id)
 
 	//request chopstick function
 	go func() {
@@ -182,24 +199,30 @@ func (phil *Philosopher) getChopsticks() {
 		_, err := capture.Read(conn.Read, buf[0:])
 		if err != nil {
 			//Connection most likely timed out, chopstick unatainable
-			fmt.Printf(err.Error())
+			// fmt.Printf(err.Error())
 			return
 		}
 		args := UnmarshallInts(buf)
 		resp := args[0]
 		if resp == Ack {
-			fmt.Printf("Received chopstick %d <- %d\n", phil.id, phil.neighbourId)
+			// fmt.Printf("Received chopstick %d <- %d\n", phil.id, phil.neighbourId)
 			neighbourChopstick <- true
 			RightChopstickState()
+			// ASSERT RIGHT CHOPSTICK (NOT OTHER STATES) AND NEIGHBOR DOESN'T HAVE IT
 		}
 	}()
 	select {
 	case <-neighbourChopstick:
-		fmt.Printf("%v got %v's chopstick.\n", phil.id, phil.neighbourId)
-		fmt.Printf("%v has two chopsticks.\n", phil.id)
+		// fmt.Printf("%v got %v's chopstick.\n", phil.id, phil.neighbourId)
+		// fmt.Printf("%v has two chopsticks.\n", phil.id)
+		requestedValues := make(map[string][]string)
+		requestedValues[fmt.Sprintf(":%d", phil.id+150)] = append(requestedValues[fmt.Sprintf(":%d", phil.id+150)], "RightChopstick")
+		requestedValues[fmt.Sprintf(":%d", phil.neighbourId+150)] = append(requestedValues[fmt.Sprintf(":%d", phil.neighbourId+150)], "LeftChopstick")
+		assert.Assert(assertRightChopstick, requestedValues)
+
 		return
 	case <-timeout:
-		fmt.Printf("Timed out on %d\n", phil.id)
+		// fmt.Printf("Timed out on %d\n", phil.id)
 		phil.chopstick <- true
 		phil.think()
 		phil.getChopsticks()
@@ -209,10 +232,11 @@ func (phil *Philosopher) getChopsticks() {
 func (phil *Philosopher) returnChopsticks() {
 	phil.chopstick <- true
 	req := MarshallInts([]int{ReleaseStick})
-	fmt.Printf("Returning stick %d -> %d\n", phil.id, phil.neighbourId)
+	// fmt.Printf("Returning stick %d -> %d\n", phil.id, phil.neighbourId)
 	conn := phil.neighbour
 	capture.Write(conn.Write, req)
 	ThinkingState()
+	// ASSERT THINKING STATE
 }
 
 func (phil *Philosopher) dine() {
@@ -243,13 +267,28 @@ func main() {
 	flag.IntVar(&myPort, "mP", 8080, "The port number this host will listen on")
 	flag.IntVar(&neighbourPort, "nP", 8081, "The port this host neighbour will listen on")
 	flag.Parse()
+
+	neighbors = append(neighbors, fmt.Sprintf(":%d", neighbourPort+150))
+
+	// fmt.Printf("%v\n", neighbors)
+
+	processName := fmt.Sprintf("%d", myPort)
+	assert.InitDistributedAssert(fmt.Sprintf(":%d", myPort+150), neighbors, processName);
+
+	// fmt.Printf("Me: %d, Neighbour: %d, Me_Assert: %d, Neighbour_Assert: %d\n", myPort, neighbourPort, myPort+150, neighbourPort+150)
+
+	assert.AddAssertable("Eating", &Eating, nil);
+	assert.AddAssertable("Thinking", &Thinking, nil);
+	assert.AddAssertable("LeftChopstick", &LeftChopstick, nil);
+	assert.AddAssertable("RightChopstick", &RightChopstick, nil);
+
 	philosopher := makePhilosopher(myPort, neighbourPort)
 	for i := 0; i < 100; i++ {
 		philosopher.dine()
 	}
-	fmt.Printf("%v is done dining---------------------------------------------\n", philosopher.id)
+	// fmt.Printf("%v is done dining---------------------------------------------\n", philosopher.id)
 	philosopher.leaveTable()
-	fmt.Printf("%d left the table --------------------------------------------\n", philosopher.id)
+	// fmt.Printf("%d left the table --------------------------------------------\n", philosopher.id)
 }
 
 //Marshalling Functions
