@@ -48,7 +48,9 @@ func EatingState() {
 func ThinkingState() {
 	Eating = false
 	Thinking = true
-	LeftChopstick = false // CHANGE TO false
+	// ============================== ASSERT CODE ==============================
+	LeftChopstick = false // CHANGE TO true to induce failure
+	// ============================ END ASSERT CODE ============================
 	RightChopstick = false
 }
 
@@ -66,6 +68,7 @@ func RightChopstickState() {
 	RightChopstick = true
 }
 
+// ============================== ASSERT CODE ==============================
 func assertRightChopstick(values map[string]map[string]interface{}) bool {
 	id_int, _ := strconv.ParseInt(ID, 10, 0)
 	id_int = id_int + 150
@@ -75,6 +78,7 @@ func assertRightChopstick(values map[string]map[string]interface{}) bool {
 	}
 	return true
 }
+// ============================ END ASSERT CODE ============================
 
 //structure defining a philosopher
 type Philosopher struct {
@@ -212,11 +216,13 @@ func (phil *Philosopher) getChopsticks() {
 	case <-neighbourChopstick:
 		// fmt.Printf("%v got %v's chopstick.\n", phil.id, phil.neighbourId)
 		// fmt.Printf("%v has two chopsticks.\n", phil.id)
+
+		// ============================== ASSERT CODE ==============================
 		requestedValues := make(map[string][]string)
 		requestedValues[fmt.Sprintf(":%d", phil.id+150)] = append(requestedValues[fmt.Sprintf(":%d", phil.id+150)], "RightChopstick")
 		requestedValues[fmt.Sprintf(":%d", phil.neighbourId+150)] = append(requestedValues[fmt.Sprintf(":%d", phil.neighbourId+150)], "LeftChopstick")
-		// CALLING ASSERTION
 		assert.Assert(assertRightChopstick, requestedValues)
+		// ============================ END ASSERT CODE ============================
 
 		return
 	case <-timeout:
@@ -269,15 +275,14 @@ func main() {
 
 	// fmt.Printf("%v\n", neighbors)
 
+	// ============================== ASSERT CODE ==============================
 	processName := fmt.Sprintf("%d", myPort)
 	assert.InitDistributedAssert(fmt.Sprintf(":%d", myPort+150), neighbors, processName);
-
-	// fmt.Printf("Me: %d, Neighbour: %d, Me_Assert: %d, Neighbour_Assert: %d\n", myPort, neighbourPort, myPort+150, neighbourPort+150)
-
 	assert.AddAssertable("Eating", &Eating, nil);
 	assert.AddAssertable("Thinking", &Thinking, nil);
 	assert.AddAssertable("LeftChopstick", &LeftChopstick, nil);
 	assert.AddAssertable("RightChopstick", &RightChopstick, nil);
+	// ============================ END ASSERT CODE ============================
 
 	time.Sleep(15*time.Second)
 

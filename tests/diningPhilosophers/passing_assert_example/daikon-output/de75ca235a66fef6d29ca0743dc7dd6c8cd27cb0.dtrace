@@ -1,0 +1,464 @@
+decl-version 2.0
+var-comparability none
+
+ppt p-_a58824915c32b23e0651e2ddd1c23681b8a24498_da39a3ee5e6b4b0d3255bfef95601890afd80709_da39a3ee5e6b4b0d3255bfef95601890afd80709_eb853c48f39f3c3f0048d21a8172b6e194000454:::_a58824915c32b23e0651e2ddd1c23681b8a24498_da39a3ee5e6b4b0d3255bfef95601890afd80709_da39a3ee5e6b4b0d3255bfef95601890afd80709_eb853c48f39f3c3f0048d21a8172b6e194000454
+ppt-type point
+variable 254883023-Ack
+var-kind variable
+dec-type int
+rep-type int
+comparability -1
+variable 254883023-BUFF_SIZE
+var-kind variable
+dec-type int
+rep-type int
+comparability -1
+variable 254883023-Eating
+var-kind variable
+dec-type boolean
+rep-type boolean
+comparability -1
+variable 254883023-ExcuseMe
+var-kind variable
+dec-type int
+rep-type int
+comparability -1
+variable 254883023-Excused
+var-kind variable
+dec-type boolean
+rep-type boolean
+comparability -1
+variable 254883023-LeftChopstick
+var-kind variable
+dec-type boolean
+rep-type boolean
+comparability -1
+variable 254883023-ReleaseStick
+var-kind variable
+dec-type int
+rep-type int
+comparability -1
+variable 254883023-RequestStick
+var-kind variable
+dec-type int
+rep-type int
+comparability -1
+variable 254883023-RightChopstick
+var-kind variable
+dec-type boolean
+rep-type boolean
+comparability -1
+variable 254883023-SIZEOFINT
+var-kind variable
+dec-type int
+rep-type int
+comparability -1
+variable 254883023-SLEEP_MAX
+var-kind variable
+dec-type float
+rep-type float
+comparability -1
+variable 254883023-Thinking
+var-kind variable
+dec-type boolean
+rep-type boolean
+comparability -1
+variable 254883023-n
+var-kind variable
+dec-type int
+rep-type int
+comparability -1
+variable 140687742-Ack
+var-kind variable
+dec-type int
+rep-type int
+comparability -1
+variable 140687742-BUFF_SIZE
+var-kind variable
+dec-type int
+rep-type int
+comparability -1
+variable 140687742-Eating
+var-kind variable
+dec-type boolean
+rep-type boolean
+comparability -1
+variable 140687742-ExcuseMe
+var-kind variable
+dec-type int
+rep-type int
+comparability -1
+variable 140687742-Excused
+var-kind variable
+dec-type boolean
+rep-type boolean
+comparability -1
+variable 140687742-LeftChopstick
+var-kind variable
+dec-type boolean
+rep-type boolean
+comparability -1
+variable 140687742-ReleaseStick
+var-kind variable
+dec-type int
+rep-type int
+comparability -1
+variable 140687742-RequestStick
+var-kind variable
+dec-type int
+rep-type int
+comparability -1
+variable 140687742-RightChopstick
+var-kind variable
+dec-type boolean
+rep-type boolean
+comparability -1
+variable 140687742-SIZEOFINT
+var-kind variable
+dec-type int
+rep-type int
+comparability -1
+variable 140687742-SLEEP_MAX
+var-kind variable
+dec-type float
+rep-type float
+comparability -1
+variable 140687742-Thinking
+var-kind variable
+dec-type boolean
+rep-type boolean
+comparability -1
+variable 140687742-n
+var-kind variable
+dec-type int
+rep-type int
+comparability -1
+
+p-_a58824915c32b23e0651e2ddd1c23681b8a24498_da39a3ee5e6b4b0d3255bfef95601890afd80709_da39a3ee5e6b4b0d3255bfef95601890afd80709_eb853c48f39f3c3f0048d21a8172b6e194000454:::_a58824915c32b23e0651e2ddd1c23681b8a24498_da39a3ee5e6b4b0d3255bfef95601890afd80709_da39a3ee5e6b4b0d3255bfef95601890afd80709_eb853c48f39f3c3f0048d21a8172b6e194000454
+this_invocation_nonce
+0
+254883023-Ack
+255
+1
+254883023-BUFF_SIZE
+1024
+1
+254883023-Eating
+false
+1
+254883023-ExcuseMe
+3
+1
+254883023-Excused
+false
+1
+254883023-LeftChopstick
+false
+1
+254883023-ReleaseStick
+2
+1
+254883023-RequestStick
+1
+1
+254883023-RightChopstick
+false
+1
+254883023-SIZEOFINT
+4
+1
+254883023-SLEEP_MAX
+100000000.00
+1
+254883023-Thinking
+true
+1
+254883023-n
+50
+1
+140687742-Ack
+255
+1
+140687742-BUFF_SIZE
+1024
+1
+140687742-Eating
+false
+1
+140687742-ExcuseMe
+3
+1
+140687742-Excused
+false
+1
+140687742-LeftChopstick
+false
+1
+140687742-ReleaseStick
+2
+1
+140687742-RequestStick
+1
+1
+140687742-RightChopstick
+false
+1
+140687742-SIZEOFINT
+4
+1
+140687742-SLEEP_MAX
+100000000.00
+1
+140687742-Thinking
+true
+1
+140687742-n
+50
+1
+
+p-_a58824915c32b23e0651e2ddd1c23681b8a24498_da39a3ee5e6b4b0d3255bfef95601890afd80709_da39a3ee5e6b4b0d3255bfef95601890afd80709_eb853c48f39f3c3f0048d21a8172b6e194000454:::_a58824915c32b23e0651e2ddd1c23681b8a24498_da39a3ee5e6b4b0d3255bfef95601890afd80709_da39a3ee5e6b4b0d3255bfef95601890afd80709_eb853c48f39f3c3f0048d21a8172b6e194000454
+this_invocation_nonce
+1
+254883023-Ack
+255
+1
+254883023-BUFF_SIZE
+1024
+1
+254883023-Eating
+false
+1
+254883023-ExcuseMe
+3
+1
+254883023-Excused
+false
+1
+254883023-LeftChopstick
+true
+1
+254883023-ReleaseStick
+2
+1
+254883023-RequestStick
+1
+1
+254883023-RightChopstick
+false
+1
+254883023-SIZEOFINT
+4
+1
+254883023-SLEEP_MAX
+100000000.00
+1
+254883023-Thinking
+true
+1
+254883023-n
+50
+1
+140687742-Ack
+255
+1
+140687742-BUFF_SIZE
+1024
+1
+140687742-Eating
+false
+1
+140687742-ExcuseMe
+3
+1
+140687742-Excused
+false
+1
+140687742-LeftChopstick
+false
+1
+140687742-ReleaseStick
+2
+1
+140687742-RequestStick
+1
+1
+140687742-RightChopstick
+false
+1
+140687742-SIZEOFINT
+4
+1
+140687742-SLEEP_MAX
+100000000.00
+1
+140687742-Thinking
+true
+1
+140687742-n
+50
+1
+
+p-_a58824915c32b23e0651e2ddd1c23681b8a24498_da39a3ee5e6b4b0d3255bfef95601890afd80709_da39a3ee5e6b4b0d3255bfef95601890afd80709_eb853c48f39f3c3f0048d21a8172b6e194000454:::_a58824915c32b23e0651e2ddd1c23681b8a24498_da39a3ee5e6b4b0d3255bfef95601890afd80709_da39a3ee5e6b4b0d3255bfef95601890afd80709_eb853c48f39f3c3f0048d21a8172b6e194000454
+this_invocation_nonce
+2
+254883023-Ack
+255
+1
+254883023-BUFF_SIZE
+1024
+1
+254883023-Eating
+false
+1
+254883023-ExcuseMe
+3
+1
+254883023-Excused
+false
+1
+254883023-LeftChopstick
+true
+1
+254883023-ReleaseStick
+2
+1
+254883023-RequestStick
+1
+1
+254883023-RightChopstick
+false
+1
+254883023-SIZEOFINT
+4
+1
+254883023-SLEEP_MAX
+100000000.00
+1
+254883023-Thinking
+true
+1
+254883023-n
+50
+1
+140687742-Ack
+255
+1
+140687742-BUFF_SIZE
+1024
+1
+140687742-Eating
+false
+1
+140687742-ExcuseMe
+3
+1
+140687742-Excused
+false
+1
+140687742-LeftChopstick
+false
+1
+140687742-ReleaseStick
+2
+1
+140687742-RequestStick
+1
+1
+140687742-RightChopstick
+false
+1
+140687742-SIZEOFINT
+4
+1
+140687742-SLEEP_MAX
+100000000.00
+1
+140687742-Thinking
+true
+1
+140687742-n
+50
+1
+
+p-_a58824915c32b23e0651e2ddd1c23681b8a24498_da39a3ee5e6b4b0d3255bfef95601890afd80709_da39a3ee5e6b4b0d3255bfef95601890afd80709_eb853c48f39f3c3f0048d21a8172b6e194000454:::_a58824915c32b23e0651e2ddd1c23681b8a24498_da39a3ee5e6b4b0d3255bfef95601890afd80709_da39a3ee5e6b4b0d3255bfef95601890afd80709_eb853c48f39f3c3f0048d21a8172b6e194000454
+this_invocation_nonce
+3
+254883023-Ack
+255
+1
+254883023-BUFF_SIZE
+1024
+1
+254883023-Eating
+false
+1
+254883023-ExcuseMe
+3
+1
+254883023-Excused
+false
+1
+254883023-LeftChopstick
+true
+1
+254883023-ReleaseStick
+2
+1
+254883023-RequestStick
+1
+1
+254883023-RightChopstick
+false
+1
+254883023-SIZEOFINT
+4
+1
+254883023-SLEEP_MAX
+100000000.00
+1
+254883023-Thinking
+true
+1
+254883023-n
+50
+1
+140687742-Ack
+255
+1
+140687742-BUFF_SIZE
+1024
+1
+140687742-Eating
+false
+1
+140687742-ExcuseMe
+3
+1
+140687742-Excused
+false
+1
+140687742-LeftChopstick
+false
+1
+140687742-ReleaseStick
+2
+1
+140687742-RequestStick
+1
+1
+140687742-RightChopstick
+false
+1
+140687742-SIZEOFINT
+4
+1
+140687742-SLEEP_MAX
+100000000.00
+1
+140687742-Thinking
+true
+1
+140687742-n
+50
+1
+

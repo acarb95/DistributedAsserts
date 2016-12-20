@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bitbucket.org/bestchai/dinv/dinvRT"
 	"encoding/binary"
 	"fmt"
 	"github.com/arcaneiceman/GoVector/capture"
@@ -23,18 +24,8 @@ var sum int64
 var client_assert_addr = ":18589"
 var server_assert_addr = ":9099"
 
+// ============================== ASSERT CODE ==============================
 func assertValue(values map[string]map[string]interface{}) bool {
-	// TODO: could add server sum to this, but it does show that not 
-	// 		all assertable variables need to be in the assertion.
-
-	// for k, v := range values {
-	// 	fmt.Printf("%s: [", k)
-	// 	for k2, v2 := range v {
-	// 		fmt.Printf("%s: %v, ", k2, v2)
-	// 	}
-	// 	fmt.Printf("]\n")
-	// }
-
 	int_a := values[server_assert_addr]["a"].(int64)
 	int_b := values[server_assert_addr]["b"].(int64)
 	int_n := values[client_assert_addr]["n"].(int64)
@@ -57,12 +48,19 @@ func assertValue(values map[string]map[string]interface{}) bool {
 		return true
 	}
 }
+// ============================ END ASSERT CODE ============================
+
 
 func main() {
+	// ============================== ASSERT CODE ==============================
 	assert.InitDistributedAssert(client_assert_addr, []string{server_assert_addr}, "client");
 	assert.AddAssertable("n", &n, nil);
 	assert.AddAssertable("m", &m, nil);
 	assert.AddAssertable("sum", &sum, nil)
+	// ============================ END ASSERT CODE ============================
+
+	time.Sleep(5*time.Second)
+
 	localAddr, err := net.ResolveUDPAddr("udp4", ":18585")
 	printErrAndExit(err)
 	remoteAddr, err := net.ResolveUDPAddr("udp4", ":9090")
@@ -78,6 +76,7 @@ func main() {
 			continue
 		}
 
+		// ============================== ASSERT CODE ==============================
 		// Add requested value for current program, then for every other neighbor
 		requestedValues := make(map[string][]string)
 		requestedValues[client_assert_addr] = append(requestedValues[client_assert_addr], "n")
@@ -89,8 +88,11 @@ func main() {
 
 		// Assert on those requested things. 
 		assert.Assert(assertValue, requestedValues)
+		// ============================ END ASSERT CODE ============================
+
+
 		time.Sleep(assert.GetAssertDelay()*2)
-		fmt.Printf("[CLIENT] %d/%d: %d + %d = %d\n", t, RUNS, n, m, sum)
+		// fmt.Printf("[CLIENT] %d/%d: %d + %d = %d\n", t, RUNS, n, m, sum)
 	}
 	fmt.Println()
 	os.Exit(0)
@@ -109,8 +111,6 @@ func reqSum(conn *net.UDPConn, n, m int64) (sum int64, err error) {
 		return
 	}
 
-	//@dump
-
 	buf := make([]byte, 256)
 	// after instrumentation
 	_, err = capture.Read(conn.Read, buf[:])
@@ -119,11 +119,11 @@ func reqSum(conn *net.UDPConn, n, m int64) (sum int64, err error) {
 		return
 	}
 
+	dinvRT.Track("client", "n, m, sum", n, m, sum)
+
 	sum, _ = binary.Varint(buf[0:])
 
 	// fmt.Println(sum, buf)
-
-	//@dump
 
 	return
 }

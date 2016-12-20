@@ -30,14 +30,6 @@ function runLogMerger {
     directory=./results
     echo $directory
     cd $directory
-    #merging consistant cuts
-    dinv -v -l *Encoded.txt *log-Log.txt
-    mkdir dinv-output
-    mv *.trace dinv-output
-    # TODO make dtrace files
-    for trace_file in ./dinv-output/*; do
-        mv "$trace_file" "./dinv-output/$(basename "$trace_file" .trace).dtrace"
-    done
     #regular daikon output
     dinv -l -plan=NONE *Encoded.txt *log-Log.txt 
     mkdir daikon-output
@@ -55,13 +47,6 @@ function runDaikon {
         mv *.gz $directory
         # gunzip $directory/*.gz
         java daikon.PrintInvariants $directory/*.inv.gz > $directory/daikon_output.txt
-    done
-
-    for directory in ./dinv*; do
-        java daikon.Daikon $directory/*.dtrace
-        mv *.gz $directory
-        # gunzip $directory/*.gz
-        java daikon.PrintInvariants $directory/*.inv.gz > $directory/dinv_output.txt
     done
 }
 

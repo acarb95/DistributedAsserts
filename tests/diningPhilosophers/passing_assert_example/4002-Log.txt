@@ -1,0 +1,178 @@
+4002 {"4002":1}
+Initialization Complete
+4002 {"4002":2}
+Get Time Request
+4002 {"4002":3, "4003":4}
+Received Message From Node
+4002 {"4002":4, "4003":4}
+Received message [MessageType: 5] from [127.0.0.1:4153]
+4002 {"4001":2, "4002":5, "4003":4}
+Received Message From Node
+4002 {"4001":2, "4002":6, "4003":4}
+Received message [MessageType: 4] from [127.0.0.1:4151]
+4002 {"4001":2, "4002":7, "4003":4}
+Round Trip Response
+4002 {"4001":2, "4002":8, "4003":4}
+Round Trip Request
+4002 {"4001":2, "4002":9, "4003":10, "4004":4}
+Received Message From Node
+4002 {"4001":2, "4002":10, "4003":10, "4004":4}
+Received message [MessageType: 1] from [127.0.0.1:4153]
+4002 {"4001":5, "4002":11, "4003":10, "4004":4}
+Received Message From Node
+4002 {"4001":5, "4002":12, "4003":10, "4004":4}
+Received message [MessageType: 0] from [127.0.0.1:4151]
+4002 {"4001":5, "4002":13, "4003":10, "4004":4}
+Round Trip Response
+4002 {"4001":5, "4002":14, "4003":10, "4004":4}
+Sync Time Request
+4002 {"4001":8, "4002":15, "4003":10, "4004":4}
+Received Message From Node
+4002 {"4001":8, "4002":16, "4003":10, "4004":4}
+Received message [MessageType: 6] from [127.0.0.1:4151]
+4002 {"4001":8, "4002":17, "4003":10, "4004":4}
+Round Trip Request
+4002 {"4001":8, "4002":18, "4003":19, "4004":8}
+Received Message From Node
+4002 {"4001":8, "4002":19, "4003":19, "4004":8}
+Received message [MessageType: 1] from [127.0.0.1:4153]
+4002 {"4001":8, "4002":20, "4003":19, "4004":8}
+Get Time Request
+4002 {"4001":9, "4002":21, "4003":19, "4004":8}
+Received Message From Node
+4002 {"4001":9, "4002":22, "4003":19, "4004":8}
+Received message [MessageType: 4] from [127.0.0.1:4151]
+4002 {"4001":9, "4002":23, "4003":19, "4004":8}
+Round Trip Response
+4002 {"4001":10, "4002":24, "4003":19, "4004":8}
+Received Message From Node
+4002 {"4001":10, "4002":25, "4003":19, "4004":8}
+Received message [MessageType: 0] from [127.0.0.1:4151]
+4002 {"4001":10, "4002":26, "4003":19, "4004":8}
+Round Trip Response
+4002 {"4001":15, "4002":27, "4003":19, "4004":8}
+Received Message From Node
+4002 {"4001":15, "4002":28, "4003":19, "4004":8}
+Received message [MessageType: 6] from [127.0.0.1:4151]
+4002 {"4001":15, "4002":29, "4003":19, "4004":8}
+Round Trip Request
+4002 {"4001":15, "4002":30, "4003":31, "4004":17}
+Received Message From Node
+4002 {"4001":15, "4002":31, "4003":31, "4004":17}
+Received message [MessageType: 1] from [127.0.0.1:4153]
+4002 {"4001":16, "4002":32, "4003":31, "4004":17}
+Received Message From Node
+4002 {"4001":16, "4002":33, "4003":31, "4004":17}
+Received message [MessageType: 0] from [127.0.0.1:4151]
+4002 {"4001":16, "4002":34, "4003":31, "4004":17}
+Round Trip Response
+4002 {"4001":20, "4002":35, "4003":31, "4004":17}
+Received Message From Node
+4002 {"4001":20, "4002":36, "4003":31, "4004":17}
+Received message [MessageType: 2] from [127.0.0.1:4151]
+4002 {"4001":20, "4002":37, "4003":31, "4004":17}
+Assert Response
+4002 {"4001":32, "4002":38, "4003":31, "4004":17}
+Received Message From Node
+4002 {"4001":32, "4002":39, "4003":31, "4004":17}
+Received message [MessageType: 2] from [127.0.0.1:4151]
+4002 {"4001":32, "4002":40, "4003":31, "4004":17}
+Assert Response
+4002 {"4001":32, "4002":41, "4003":31, "4004":17}
+Get Time Request
+4002 {"4001":32, "4002":42, "4003":31, "4004":17}
+Round Trip Request
+4002 {"4001":32, "4002":43, "4003":50, "4004":26}
+Received Message From Node
+4002 {"4001":32, "4002":44, "4003":50, "4004":26}
+Received message [MessageType: 1] from [127.0.0.1:4153]
+4002 {"4001":32, "4002":45, "4003":50, "4004":26}
+Get Time Request
+4002 {"4001":32, "4002":46, "4003":53, "4004":26}
+Received Message From Node
+4002 {"4001":32, "4002":47, "4003":53, "4004":26}
+Received message [MessageType: 5] from [127.0.0.1:4153]
+4002 {"4001":32, "4002":48, "4003":53, "4004":26}
+Sync Time Request
+4002 {"4001":32, "4002":49, "4003":53, "4004":26}
+Round Trip Request
+4002 {"4001":32, "4002":50, "4003":58, "4004":26}
+Received Message From Node
+4002 {"4001":32, "4002":51, "4003":58, "4004":26}
+Received message [MessageType: 1] from [127.0.0.1:4153]
+4002 {"4001":32, "4002":52, "4003":58, "4004":26}
+Get Time Request
+4002 {"4001":32, "4002":53, "4003":61, "4004":26}
+Received Message From Node
+4002 {"4001":32, "4002":54, "4003":61, "4004":26}
+Received message [MessageType: 5] from [127.0.0.1:4153]
+4002 {"4001":32, "4002":55, "4003":61, "4004":26}
+Round Trip Request
+4002 {"4001":32, "4002":56, "4003":64, "4004":26}
+Received Message From Node
+4002 {"4001":32, "4002":57, "4003":64, "4004":26}
+Received message [MessageType: 1] from [127.0.0.1:4153]
+4002 {"4001":32, "4002":58, "4003":64, "4004":26}
+Sync Time Request
+4002 {"4001":32, "4002":59, "4003":64, "4004":26}
+Get Time Request
+4002 {"4001":32, "4002":60, "4003":69, "4004":26}
+Received Message From Node
+4002 {"4001":32, "4002":61, "4003":69, "4004":26}
+Received message [MessageType: 5] from [127.0.0.1:4153]
+4002 {"4001":32, "4002":62, "4003":69, "4004":26}
+Round Trip Request
+4002 {"4001":32, "4002":63, "4003":72, "4004":26}
+Received Message From Node
+4002 {"4001":32, "4002":64, "4003":72, "4004":26}
+Received message [MessageType: 1] from [127.0.0.1:4153]
+4002 {"4001":32, "4002":65, "4003":72, "4004":26}
+Sync Time Request
+4002 {"4001":32, "4002":66, "4003":72, "4004":26}
+Round Trip Request
+4002 {"4001":32, "4002":67, "4003":77, "4004":26}
+Received Message From Node
+4002 {"4001":32, "4002":68, "4003":77, "4004":26}
+Received message [MessageType: 1] from [127.0.0.1:4153]
+4002 {"4001":32, "4002":69, "4003":77, "4004":26}
+Get Time Request
+4002 {"4001":32, "4002":70, "4003":80, "4004":26}
+Received Message From Node
+4002 {"4001":32, "4002":71, "4003":80, "4004":26}
+Received message [MessageType: 5] from [127.0.0.1:4153]
+4002 {"4001":32, "4002":72, "4003":80, "4004":26}
+Sync Time Request
+4002 {"4001":32, "4002":73, "4003":80, "4004":26}
+Round Trip Request
+4002 {"4001":32, "4002":74, "4003":85, "4004":26}
+Received Message From Node
+4002 {"4001":32, "4002":75, "4003":85, "4004":26}
+Received message [MessageType: 1] from [127.0.0.1:4153]
+4002 {"4001":32, "4002":76, "4003":85, "4004":26}
+Get Time Request
+4002 {"4001":32, "4002":77, "4003":88, "4004":26}
+Received Message From Node
+4002 {"4001":32, "4002":78, "4003":88, "4004":26}
+Received message [MessageType: 5] from [127.0.0.1:4153]
+4002 {"4001":32, "4002":79, "4003":88, "4004":26}
+Sync Time Request
+4002 {"4001":32, "4002":80, "4003":88, "4004":26}
+Round Trip Request
+4002 {"4001":32, "4002":81, "4003":93, "4004":26}
+Received Message From Node
+4002 {"4001":32, "4002":82, "4003":93, "4004":26}
+Received message [MessageType: 1] from [127.0.0.1:4153]
+4002 {"4001":32, "4002":83, "4003":93, "4004":26}
+Get Time Request
+4002 {"4001":32, "4002":84, "4003":96, "4004":26}
+Received Message From Node
+4002 {"4001":32, "4002":85, "4003":96, "4004":26}
+Received message [MessageType: 5] from [127.0.0.1:4153]
+4002 {"4001":32, "4002":86, "4003":96, "4004":26}
+Sync Time Request
+4002 {"4001":32, "4002":87, "4003":96, "4004":26}
+Round Trip Request
+4002 {"4001":32, "4002":88, "4003":101, "4004":26}
+Received Message From Node
+4002 {"4001":32, "4002":89, "4003":101, "4004":26}
+Received message [MessageType: 1] from [127.0.0.1:4153]

@@ -1,0 +1,68 @@
+4003 {"4003":1}
+Initialization Complete
+4003 {"4003":2}
+Get Time Request
+4003 {"4003":3, "4004":4}
+Received Message From Node
+4003 {"4003":4, "4004":4}
+Received message [MessageType: 5] from [127.0.0.1:4154]
+4003 {"4003":5, "4004":4}
+Round Trip Request
+4003 {"4000":7, "4001":5, "4003":6, "4004":10}
+Received Message From Node
+4003 {"4000":7, "4001":5, "4003":7, "4004":10}
+Received message [MessageType: 1] from [127.0.0.1:4154]
+4003 {"4000":7, "4001":5, "4003":8, "4004":10}
+Sync Time Request
+4003 {"4000":7, "4001":5, "4003":9, "4004":10}
+Get Time Request
+4003 {"4000":7, "4001":5, "4003":10, "4004":10}
+Round Trip Request
+4003 {"4000":14, "4001":9, "4003":11, "4004":18}
+Received Message From Node
+4003 {"4000":14, "4001":9, "4003":12, "4004":18}
+Received message [MessageType: 5] from [127.0.0.1:4154]
+4003 {"4000":14, "4001":9, "4003":13, "4004":21}
+Received Message From Node
+4003 {"4000":14, "4001":9, "4003":14, "4004":21}
+Received message [MessageType: 1] from [127.0.0.1:4154]
+4003 {"4000":14, "4001":9, "4003":15, "4004":21}
+Sync Time Request
+4003 {"4000":14, "4001":9, "4003":16, "4004":21}
+Round Trip Request
+4003 {"4000":24, "4001":19, "4003":17, "4004":29}
+Received Message From Node
+4003 {"4000":24, "4001":19, "4003":18, "4004":29}
+Received message [MessageType: 1] from [127.0.0.1:4154]
+4003 {"4000":24, "4001":19, "4003":19, "4004":29}
+RTT: 50ms
+4003 {"4000":24, "4001":19, "4003":20, "4004":29}
+Requesting Assertion
+4003 {"4000":24, "4001":19, "4003":21, "4004":29}
+Requesting Assertion
+4003 {"4000":24, "4001":19, "4003":22, "4004":29}
+Received Message From Node
+4003 {"4000":24, "4001":19, "4003":23, "4004":29}
+Received message [MessageType: 2] from [127.0.0.1:4153]
+4003 {"4000":24, "4001":19, "4003":24, "4004":29}
+Assert Response
+4003 {"4000":24, "4001":19, "4003":25, "4004":29}
+Received Message From Node
+4003 {"4000":24, "4001":19, "4003":26, "4004":29}
+Received message [MessageType: 3] from [127.0.0.1:4153]
+4003 {"4000":24, "4001":19, "4003":27, "4004":32}
+Received Message From Node
+4003 {"4000":24, "4001":19, "4003":28, "4004":32}
+Received message [MessageType: 3] from [127.0.0.1:4154]
+4003 {"4000":24, "4001":19, "4003":29, "4004":32}
+ASSERTION FAILED: map[string]map[string]interface {}{":4154":map[string]interface {}{"LeftChopstick":true}, ":4153":map[string]interface {}{"RightChopstick":true}}
+4003 {"4000":24, "4001":19, "4003":30, "4004":32}
+Assertion Failed
+4003 {"4000":24, "4001":19, "4003":31, "4004":32}
+Assertion Failed
+4003 {"4000":24, "4001":19, "4003":32, "4004":32}
+Received Message From Node
+4003 {"4000":24, "4001":19, "4003":33, "4004":32}
+Received message [MessageType: 7] from [127.0.0.1:4153]
+4003 {"4000":24, "4001":19, "4003":34, "4004":32}
+Received ASSERTION FAILED

@@ -7,7 +7,7 @@ The repository is broken down as follows:
 - tests: folder containing the testing code
 
 ## Run Sample Code
-To test the library, go to the test folder and run a test of your choosing. Each test will have a comment of a variable you can change which will trigger the assertion for that test. You can run it once with the assertion and once without the assertion to see the difference in behavior. Each test will have a README that describes in more detail how to run the tests and where the assertion is.
+To test the library, go to the test folder and run a test of your choosing. Each test will have a comment of a variable you can change which will trigger the assertion for that test. You can run it once with the assertion and once without the assertion to see the difference in behavior. Each test will have a README that describes in more detail how to run the tests and where the assertion is. The tests used are modified from [here](https://bitbucket.org/bestchai/dinv).
 
 ## Note
 If running on macOS Sierra and using GoLang 1.6 this will throw a run-time fatal error. This is because GoLang 1.6 is not compatible with macOS Sierra, the programs appear to run fine though. See [here](https://github.com/golang/go/issues/17492).

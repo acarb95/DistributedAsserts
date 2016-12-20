@@ -1,91 +1,56 @@
 #!/bin/bash
-# diningPhil/run.sh controls the exection of the dining philosophers
-# example diningPhilosophers runs on an arbetrary number of hosts, the
-# communication pattern follows Host_i-1 <--> Host_i <--> Host_i+1
-# That is, every host has a neighbour, and only communicates with that
-# neighbour
 
 Hosts=5
 BasePort=4000
-DINV=$GOPATH/src/bitbucket.org/bestchai/dinv
 testDir=$GOPATH/src/github.com/acarb95/DistributedAsserts/tests/diningPhilosophers
-P1=diningphilosopher.go
-Original=original
-
-function installDinv {
-    echo "Install dinv"
-    cd $DINV
-    sudo -E go install
-}
-
-function instrument {
-    cd $testDir
-    mkdir $Original
-    cp $P1 $Original/
-
-    dinv -i  -file=$P1
-    GoVector  -file=$P1
-}
 
 function runTestPrograms {
     cd $testDir
     pwd
     for (( i=0; i<Hosts; i++))
     do
-        echo $i
+        # echo $i
         let "hostPort=i + BasePort"
         let "neighbourPort= (i+1)%Hosts + BasePort"
         go run diningphilosopher.go -mP $hostPort -nP $neighbourPort &
     done
     sleep 60
     kill `ps | grep phil | awk '{print $1}'`
+    mkdir results
+    mv *.txt results
 }
 
 function runLogMerger {
-    cd $testDir/diningPhil
-    dinv -v -l -plan="SCM" -shiviz *Encoded.txt *Log.txt
+    cd $testDir/results
+    dinv -l -plan=SCM *Encoded.txt *log-Log.txt 
+    mkdir daikon-output
+    mv *.trace daikon-output
+    for trace_file in ./daikon-output/*; do
+        mv "$trace_file" "./daikon-output/$(basename "$trace_file" .trace).dtrace"
+    done
 }
 
 function shivizMerge {
-    cat $rm $DINV/TestPrograms/$TEST/$P1.log-Log.txt $DINV/TestPrograms/$TEST/$P2.log-Log.txt $DINV/TestPrograms/$TEST/$P3.log-Log.txt > $DINV/TestPrograms/expr/dinv_T3/shiviz.txt
-    
+    cd $testDir/results
+    file_name=./AssertionShiViz.log
+    echo "(?<host>\S*) (?<clock>{.*})\\n(?<event>.*)" > $file_name
+    echo "" >> $file_name
+    cat 400*-Log.txt >> $file_name
 }
 
 function runDaikon {
-    cd $testDir/diningPhil
-    for file in ./*.dtrace; do
-        java daikon.Daikon $file
-    done
-    rm output.txt
-    for trace in ./*.gz; do
-        java daikon.PrintInvariants $trace >> output.txt
-    done
-    cat output.txt
-}
-
-function fixModDir {
-    rm -r $testDir/$1
-    mv $testDir/$1_orig $testDir/$1
-}
-
-function fixModDir {
     cd $testDir
-    if [ -d $Original ]; then
-            rm $P1
-            mv $Original/* ./
-            rmdir $Original
-    fi
+    for directory in ./daikon*; do
+        java daikon.Daikon $directory/*.dtrace
+        mv *.gz $directory
+        java daikon.PrintInvariants $directory/*.inv.gz > $directory/daikon_output.txt
+    done
 }
 
 function cleanUp {
     cd $testDir
     kill `ps | grep dining | awk '{print $1}'`
-    fixModDir $P1
-    rm ./*.dtrace
-    rm ./*.gz
-    rm ./*.txt
-    rm L*
-    
+    rm -rf results
 }
 
 #Start Here
@@ -94,8 +59,9 @@ then
     cleanUp
     exit
 fi
-# installDinv
-# instrument $P1
+
 runTestPrograms
+# sleep 5
 # runLogMerger
-# time runDaikon
+# runDaikon
+shivizMerge

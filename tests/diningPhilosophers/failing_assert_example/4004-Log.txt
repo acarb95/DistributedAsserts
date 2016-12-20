@@ -1,0 +1,70 @@
+4004 {"4004":1}
+Initialization Complete
+4004 {"4003":2, "4004":2}
+Received Message From Node
+4004 {"4003":2, "4004":3}
+Received message [MessageType: 4] from [127.0.0.1:4153]
+4004 {"4003":2, "4004":4}
+Round Trip Response
+4004 {"4003":2, "4004":5}
+Round Trip Request
+4004 {"4000":7, "4001":5, "4003":2, "4004":6}
+Received Message From Node
+4004 {"4000":7, "4001":5, "4003":2, "4004":7}
+Received message [MessageType: 1] from [127.0.0.1:4150]
+4004 {"4000":7, "4001":5, "4003":5, "4004":8}
+Received Message From Node
+4004 {"4000":7, "4001":5, "4003":5, "4004":9}
+Received message [MessageType: 0] from [127.0.0.1:4153]
+4004 {"4000":7, "4001":5, "4003":5, "4004":10}
+Round Trip Response
+4004 {"4000":7, "4001":5, "4003":8, "4004":11}
+Received Message From Node
+4004 {"4000":7, "4001":5, "4003":8, "4004":12}
+Received message [MessageType: 6] from [127.0.0.1:4153]
+4004 {"4000":7, "4001":5, "4003":8, "4004":13}
+Round Trip Request
+4004 {"4000":14, "4001":9, "4003":8, "4004":14}
+Received Message From Node
+4004 {"4000":14, "4001":9, "4003":8, "4004":15}
+Received message [MessageType: 1] from [127.0.0.1:4150]
+4004 {"4000":14, "4001":9, "4003":9, "4004":16}
+Received Message From Node
+4004 {"4000":14, "4001":9, "4003":9, "4004":17}
+Received message [MessageType: 4] from [127.0.0.1:4153]
+4004 {"4000":14, "4001":9, "4003":9, "4004":18}
+Round Trip Response
+4004 {"4000":14, "4001":9, "4003":10, "4004":19}
+Received Message From Node
+4004 {"4000":14, "4001":9, "4003":10, "4004":20}
+Received message [MessageType: 0] from [127.0.0.1:4153]
+4004 {"4000":14, "4001":9, "4003":10, "4004":21}
+Round Trip Response
+4004 {"4000":14, "4001":9, "4003":15, "4004":22}
+Received Message From Node
+4004 {"4000":14, "4001":9, "4003":15, "4004":23}
+Received message [MessageType: 6] from [127.0.0.1:4153]
+4004 {"4000":14, "4001":9, "4003":15, "4004":24}
+Round Trip Request
+4004 {"4000":24, "4001":19, "4003":15, "4004":25}
+Received Message From Node
+4004 {"4000":24, "4001":19, "4003":15, "4004":26}
+Received message [MessageType: 1] from [127.0.0.1:4150]
+4004 {"4000":24, "4001":19, "4003":16, "4004":27}
+Received Message From Node
+4004 {"4000":24, "4001":19, "4003":16, "4004":28}
+Received message [MessageType: 0] from [127.0.0.1:4153]
+4004 {"4000":24, "4001":19, "4003":16, "4004":29}
+Round Trip Response
+4004 {"4000":24, "4001":19, "4003":20, "4004":30}
+Received Message From Node
+4004 {"4000":24, "4001":19, "4003":20, "4004":31}
+Received message [MessageType: 2] from [127.0.0.1:4153]
+4004 {"4000":24, "4001":19, "4003":20, "4004":32}
+Assert Response
+4004 {"4000":24, "4001":19, "4003":31, "4004":33}
+Received Message From Node
+4004 {"4000":24, "4001":19, "4003":31, "4004":34}
+Received message [MessageType: 7] from [127.0.0.1:4153]
+4004 {"4000":24, "4001":19, "4003":31, "4004":35}
+Received ASSERTION FAILED

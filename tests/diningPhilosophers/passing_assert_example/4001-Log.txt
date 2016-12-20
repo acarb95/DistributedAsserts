@@ -1,0 +1,80 @@
+4001 {"4001":1}
+Initialization Complete
+4001 {"4001":2}
+Get Time Request
+4001 {"4001":3, "4002":7, "4003":4}
+Received Message From Node
+4001 {"4001":4, "4002":7, "4003":4}
+Received message [MessageType: 5] from [127.0.0.1:4152]
+4001 {"4001":5, "4002":7, "4003":4}
+Round Trip Request
+4001 {"4001":6, "4002":13, "4003":10, "4004":4}
+Received Message From Node
+4001 {"4001":7, "4002":13, "4003":10, "4004":4}
+Received message [MessageType: 1] from [127.0.0.1:4152]
+4001 {"4001":8, "4002":13, "4003":10, "4004":4}
+Sync Time Request
+4001 {"4001":9, "4002":13, "4003":10, "4004":4}
+Get Time Request
+4001 {"4001":10, "4002":13, "4003":10, "4004":4}
+Round Trip Request
+4001 {"4001":11, "4002":23, "4003":19, "4004":8}
+Received Message From Node
+4001 {"4001":12, "4002":23, "4003":19, "4004":8}
+Received message [MessageType: 5] from [127.0.0.1:4152]
+4001 {"4001":13, "4002":26, "4003":19, "4004":8}
+Received Message From Node
+4001 {"4001":14, "4002":26, "4003":19, "4004":8}
+Received message [MessageType: 1] from [127.0.0.1:4152]
+4001 {"4001":15, "4002":26, "4003":19, "4004":8}
+Sync Time Request
+4001 {"4001":16, "4002":26, "4003":19, "4004":8}
+Round Trip Request
+4001 {"4001":17, "4002":34, "4003":31, "4004":17}
+Received Message From Node
+4001 {"4001":18, "4002":34, "4003":31, "4004":17}
+Received message [MessageType: 1] from [127.0.0.1:4152]
+4001 {"4001":19, "4002":34, "4003":31, "4004":17}
+RTT: 50ms
+4001 {"4001":20, "4002":34, "4003":31, "4004":17}
+Requesting Assertion
+4001 {"4001":21, "4002":34, "4003":31, "4004":17}
+Requesting Assertion
+4001 {"4001":22, "4002":34, "4003":31, "4004":17}
+Received Message From Node
+4001 {"4001":23, "4002":34, "4003":31, "4004":17}
+Received message [MessageType: 2] from [127.0.0.1:4151]
+4001 {"4001":24, "4002":34, "4003":31, "4004":17}
+Assert Response
+4001 {"4001":25, "4002":34, "4003":31, "4004":17}
+Received Message From Node
+4001 {"4001":26, "4002":34, "4003":31, "4004":17}
+Received message [MessageType: 3] from [127.0.0.1:4151]
+4001 {"4001":27, "4002":37, "4003":31, "4004":17}
+Received Message From Node
+4001 {"4001":28, "4002":37, "4003":31, "4004":17}
+Received message [MessageType: 3] from [127.0.0.1:4152]
+4001 {"4001":29, "4002":37, "4003":31, "4004":17}
+ASSERTION PASSED: map[string]map[string]interface {}{":4151":map[string]interface {}{"RightChopstick":true}, ":4152":map[string]interface {}{"LeftChopstick":false}}
+4001 {"4001":30, "4002":37, "4003":31, "4004":17}
+RTT: 50ms
+4001 {"4001":31, "4002":37, "4003":31, "4004":17}
+Requesting Assertion
+4001 {"4001":32, "4002":37, "4003":31, "4004":17}
+Requesting Assertion
+4001 {"4001":33, "4002":37, "4003":31, "4004":17}
+Received Message From Node
+4001 {"4001":34, "4002":37, "4003":31, "4004":17}
+Received message [MessageType: 2] from [127.0.0.1:4151]
+4001 {"4001":35, "4002":37, "4003":31, "4004":17}
+Assert Response
+4001 {"4001":36, "4002":37, "4003":31, "4004":17}
+Received Message From Node
+4001 {"4001":37, "4002":37, "4003":31, "4004":17}
+Received message [MessageType: 3] from [127.0.0.1:4151]
+4001 {"4001":38, "4002":40, "4003":31, "4004":17}
+Received Message From Node
+4001 {"4001":39, "4002":40, "4003":31, "4004":17}
+Received message [MessageType: 3] from [127.0.0.1:4152]
+4001 {"4001":40, "4002":40, "4003":31, "4004":17}
+ASSERTION PASSED: map[string]map[string]interface {}{":4151":map[string]interface {}{"RightChopstick":true}, ":4152":map[string]interface {}{"LeftChopstick":false}}

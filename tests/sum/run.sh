@@ -1,44 +1,58 @@
 #!/bin/bash
-# sum/run.sh controls the execution of the sum client server program. client
-# sends two random integers to server, and server responds with the sum.
 
-# This script mannages the instrumentation and execution of these programs, as
-# well as the merging of their generated logs, and execution of daikon on their
-# generated trace files.
-
-# The detected data invarients should include term1 + term2 = sum
-
-# set -e
-
-# http://unix.stackexchange.com/a/145654
-# exec &> >(tee -a "run.output")
-
-function fixModDir {
-    if [ -d "$testDir/$1/"lib_orig ]; then
-        rm -r $testDir/$1/lib
-        mv $testDir/$1/lib_orig $testDir/$1/lib
-    fi
-}
+testDir=$GOPATH/src/github.com/acarb95/DistributedAsserts/tests/sum
 
 function runTestPrograms {
     go run server/server.go &
-    sleep 1
+    sleep 2
     go run client/client.go &
-    wait $!
+    sleep 60
     killall server
+    mkdir results
+    mv *.txt results
 }
 
-# pushd "$(dirname "$0")"
+function runLogMerger {
+    cd $testDir/results
+    dinv -l -plan=SCM *Encoded.txt *log-Log.txt 
+    mkdir daikon-output
+    mv *.trace daikon-output
+    for trace_file in ./daikon-output/*; do
+        mv "$trace_file" "./daikon-output/$(basename "$trace_file" .trace).dtrace"
+    done
+}
 
-# ../lib.sh clean "failed"
-# ../lib.sh installDinv
-# GoVector -dir "client"
-# dinv -i -file "client/client.go"
-# GoVector -dir "server"
-# dinv -i -file "server/server.go"
+function shivizMerge {
+    cd $testDir/results
+    file_name=./AssertionShiViz.log
+    echo "(?<host>\S*) (?<clock>{.*})\\n(?<event>.*)" > $file_name
+    echo "" >> $file_name
+    cat client-Log.txt >> $file_name
+    cat server-Log.txt >> $file_name
+}
+
+function runDaikon {
+    cd $testDir/results
+    for directory in ./daikon*; do
+        java daikon.Daikon $directory/*.dtrace
+        mv *.gz $directory
+        java daikon.PrintInvariants $directory/*.inv.gz > $directory/daikon_output.txt
+    done
+}
+
+function cleanUp {
+    cd $testDir
+    rm -rf results
+}
+
+if [ "$1" == "-c" ];
+then
+    cleanUp
+    exit
+fi
+
 runTestPrograms
-# ../lib.sh runLogMerger
-# ../lib.sh runDaikon
-# ../lib.sh clean
-
-# popd
+sleep 5
+runLogMerger
+runDaikon
+shivizMerge

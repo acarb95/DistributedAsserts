@@ -1,5 +1,4 @@
-package ricartagrawala
-// package main
+package main
 
 import (
 	"bitbucket.org/bestchai/dinv/dinvRT"
@@ -14,7 +13,7 @@ import (
 	"net"
 	"time"
 	
-    // "github.com/acarb95/DistributedAsserts/assert"
+        "github.com/acarb95/DistributedAsserts/assert"
 )
 
 const BASEPORT = 10000
@@ -73,6 +72,8 @@ func (r Report) ReportMatchesPlan(p Plan) bool {
 	}
 	return true
 }
+
+// ============================== ASSERT CODE ==============================
 func assertValue(values map[string]map[string]interface{}) bool {
 	crit := false
 	for _, v := range values {
@@ -86,29 +87,26 @@ func assertValue(values map[string]map[string]interface{}) bool {
 	}
 	return true
 }
+// ============================ END ASSERT CODE ============================
 
 func critical() {
 	inCritical = true
 	dinvRT.Track(fmt.Sprintf("%dC", plan.Id), "crictical", inCritical)
 
 	// ============================== ASSERT CODE ==============================
-	// requestedValues := make(map[string][]string);
-	// requestedValues[":"+fmt.Sprintf("%d", BASEPORT+id+2*hosts)] = append(requestedValues[":"+fmt.Sprintf("%d", BASEPORT+id+2*hosts)], "inCritical")
-	// for _, v := range neighbors {
-	// 	requestedValues[v] = append(requestedValues[v], "inCritical")
-	// }
-	// conversion := 1000000.0
-	// startTime := time.Nanoseconds()
-	// assert.Assert(assertValue, requestedValues)
-	// endTime := time.Nanoseconds()
-	// fmt.Printf("Assert Elapsed (ms): %.6f", (endTime - startTime)/conversion)
+	requestedValues := make(map[string][]string);
+	requestedValues[":"+fmt.Sprintf("%d", BASEPORT+id+2*hosts)] = append(requestedValues[":"+fmt.Sprintf("%d", BASEPORT+id+2*hosts)], "inCritical")
+	for _, v := range neighbors {
+	 	requestedValues[v] = append(requestedValues[v], "inCritical")
+	}
+	assert.Assert(assertValue, requestedValues)
 	// ============================ END ASSERT CODE ============================
-
 	
 	report.Criticals++
-	// fmt.Printf("Running Critical Section on %d, run(%d/%d)  with Request time:%d \n", id, report.Criticals, plan.Criticals, RequestTime)
-	// time.Sleep(time.Duration(10)*time.Millisecond)
-	inCritical = false // Remove to induce assertion failure
+
+	// ============================== ASSERT CODE ==============================
+	inCritical = false // CHANGE TO: comment to induce assertion failure
+	// ============================ END ASSERT CODE ============================
 }
 
 var (
@@ -146,8 +144,9 @@ func Host(idArg, hostsArg int, planArg Plan) Report {
 	startTime = time.Now()
 	// fmt.Printf("Starting %d with plan to execute crit %d times\n", id+BASEPORT, planArg.Criticals)
 	initConnections(id, hosts)
-	// fmt.Printf("Connected to %d hosts on %d\n", len(nodes), id)
-	time.Sleep(1000 * time.Millisecond)
+	// fmt.Printf("%d: Connected to %d hosts on %d\n", id, len(nodes), id)
+	time.Sleep(5 * time.Second)
+	// fmt.Printf("%d Done waiting\n", id)
 
 	//start the receving demon
 	go receive()
@@ -374,9 +373,9 @@ func initConnections(id, hosts int) {
 	}
 
 	// ============================== ASSERT CODE ==============================
-	// processName := fmt.Sprintf("node%d", id)
-	// assert.InitDistributedAssert(":"+fmt.Sprintf("%d", BASEPORT+id+2*hosts), neighbors, processName);
-	// assert.AddAssertable("inCritical", &inCritical, nil);
+	processName := fmt.Sprintf("node%d", id)
+	assert.InitDistributedAssert(":"+fmt.Sprintf("%d", BASEPORT+id+2*hosts), neighbors, processName);
+	assert.AddAssertable("inCritical", &inCritical, nil);
 	// ============================ END ASSERT CODE ============================
 }
 

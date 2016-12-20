@@ -1,0 +1,184 @@
+node1 {"node1":1}
+Initialization Complete
+node1 {"node0":2, "node1":2}
+Received Message From Node
+node1 {"node0":2, "node1":3}
+Received message [MessageType: 4] from [127.0.0.1:10010]
+node1 {"node0":2, "node1":4}
+Round Trip Response
+node1 {"node0":2, "node1":5}
+Round Trip Request
+node1 {"node0":2, "node1":6}
+Round Trip Request
+node1 {"node0":2, "node1":7}
+Round Trip Request
+node1 {"node0":16, "node1":8, "node2":4, "node3":4, "node4":4}
+Received Message From Node
+node1 {"node0":16, "node1":9, "node2":4, "node3":4, "node4":4}
+Received message [MessageType: 1] from [127.0.0.1:10010]
+node1 {"node0":16, "node1":10, "node2":4, "node3":4, "node4":4}
+Round Trip Request
+node1 {"node0":16, "node1":11, "node2":7, "node3":4, "node4":4}
+Received Message From Node
+node1 {"node0":16, "node1":12, "node2":7, "node3":4, "node4":4}
+Received message [MessageType: 1] from [127.0.0.1:10012]
+node1 {"node0":16, "node1":13, "node2":7, "node3":7, "node4":4}
+Received Message From Node
+node1 {"node0":16, "node1":14, "node2":7, "node3":7, "node4":4}
+Received message [MessageType: 1] from [127.0.0.1:10013]
+node1 {"node0":16, "node1":15, "node2":7, "node3":7, "node4":7}
+Received Message From Node
+node1 {"node0":16, "node1":16, "node2":7, "node3":7, "node4":7}
+Received message [MessageType: 1] from [127.0.0.1:10014]
+node1 {"node0":16, "node1":17, "node2":7, "node3":7, "node4":9}
+Received Message From Node
+node1 {"node0":16, "node1":18, "node2":7, "node3":7, "node4":9}
+Received message [MessageType: 0] from [127.0.0.1:10014]
+node1 {"node0":16, "node1":19, "node2":7, "node3":7, "node4":9}
+Round Trip Response
+node1 {"node0":16, "node1":20, "node2":7, "node3":12, "node4":11}
+Received Message From Node
+node1 {"node0":16, "node1":21, "node2":7, "node3":12, "node4":11}
+Received message [MessageType: 0] from [127.0.0.1:10013]
+node1 {"node0":16, "node1":22, "node2":7, "node3":12, "node4":11}
+Round Trip Response
+node1 {"node0":23, "node1":23, "node2":7, "node3":12, "node4":11}
+Received Message From Node
+node1 {"node0":23, "node1":24, "node2":7, "node3":12, "node4":11}
+Received message [MessageType: 0] from [127.0.0.1:10010]
+node1 {"node0":23, "node1":25, "node2":7, "node3":12, "node4":11}
+Round Trip Response
+node1 {"node0":24, "node1":26, "node2":18, "node3":13, "node4":11}
+Received Message From Node
+node1 {"node0":24, "node1":27, "node2":18, "node3":13, "node4":11}
+Received message [MessageType: 0] from [127.0.0.1:10012]
+node1 {"node0":24, "node1":28, "node2":18, "node3":13, "node4":11}
+Round Trip Response
+node1 {"node0":25, "node1":29, "node2":19, "node3":32, "node4":20}
+Received Message From Node
+node1 {"node0":25, "node1":30, "node2":19, "node3":32, "node4":20}
+Received message [MessageType: 2] from [127.0.0.1:10013]
+node1 {"node0":25, "node1":31, "node2":19, "node3":32, "node4":20}
+Assert Response
+node1 {"node0":25, "node1":32, "node2":19, "node3":32, "node4":20}
+RTT: 50ms
+node1 {"node0":25, "node1":33, "node2":19, "node3":32, "node4":20}
+Requesting Assertion
+node1 {"node0":25, "node1":34, "node2":19, "node3":32, "node4":20}
+Requesting Assertion
+node1 {"node0":25, "node1":35, "node2":19, "node3":32, "node4":20}
+Requesting Assertion
+node1 {"node0":25, "node1":36, "node2":19, "node3":32, "node4":20}
+Requesting Assertion
+node1 {"node0":25, "node1":37, "node2":19, "node3":32, "node4":20}
+Requesting Assertion
+node1 {"node0":25, "node1":38, "node2":19, "node3":32, "node4":20}
+Received Message From Node
+node1 {"node0":25, "node1":39, "node2":19, "node3":32, "node4":20}
+Received message [MessageType: 2] from [127.0.0.1:10011]
+node1 {"node0":25, "node1":40, "node2":19, "node3":32, "node4":20}
+Assert Response
+node1 {"node0":26, "node1":41, "node2":20, "node3":34, "node4":34}
+Received Message From Node
+node1 {"node0":26, "node1":42, "node2":20, "node3":34, "node4":34}
+Received message [MessageType: 3] from [127.0.0.1:10014]
+node1 {"node0":26, "node1":43, "node2":20, "node3":34, "node4":34}
+ASSERTION PASSED: map[string]map[string]interface {}{}
+node1 {"node0":40, "node1":44, "node2":31, "node3":51, "node4":34}
+Received Message From Node
+node1 {"node0":40, "node1":45, "node2":31, "node3":51, "node4":34}
+Received message [MessageType: 3] from [127.0.0.1:10013]
+node1 {"node0":40, "node1":46, "node2":34, "node3":51, "node4":34}
+Received Message From Node
+node1 {"node0":40, "node1":47, "node2":34, "node3":51, "node4":34}
+Received message [MessageType: 3] from [127.0.0.1:10012]
+node1 {"node0":40, "node1":48, "node2":34, "node3":51, "node4":34}
+Received Message From Node
+node1 {"node0":40, "node1":49, "node2":34, "node3":51, "node4":34}
+Received message [MessageType: 3] from [127.0.0.1:10011]
+node1 {"node0":43, "node1":50, "node2":34, "node3":51, "node4":34}
+Received Message From Node
+node1 {"node0":43, "node1":51, "node2":34, "node3":51, "node4":34}
+Received message [MessageType: 3] from [127.0.0.1:10010]
+node1 {"node0":49, "node1":52, "node2":34, "node3":51, "node4":34}
+Received Message From Node
+node1 {"node0":49, "node1":53, "node2":34, "node3":51, "node4":34}
+Received message [MessageType: 2] from [127.0.0.1:10010]
+node1 {"node0":49, "node1":54, "node2":34, "node3":51, "node4":34}
+Assert Response
+node1 {"node0":49, "node1":55, "node2":34, "node3":51, "node4":34}
+Round Trip Request
+node1 {"node0":49, "node1":56, "node2":34, "node3":51, "node4":34}
+Round Trip Request
+node1 {"node0":49, "node1":57, "node2":34, "node3":51, "node4":34}
+Round Trip Request
+node1 {"node0":49, "node1":58, "node2":34, "node3":51, "node4":34}
+Round Trip Request
+node1 {"node0":49, "node1":59, "node2":40, "node3":51, "node4":34}
+Received Message From Node
+node1 {"node0":49, "node1":60, "node2":40, "node3":51, "node4":34}
+Received message [MessageType: 1] from [127.0.0.1:10012]
+node1 {"node0":49, "node1":61, "node2":40, "node3":57, "node4":34}
+Received Message From Node
+node1 {"node0":49, "node1":62, "node2":40, "node3":57, "node4":34}
+Received message [MessageType: 1] from [127.0.0.1:10013]
+node1 {"node0":49, "node1":63, "node2":40, "node3":57, "node4":40}
+Received Message From Node
+node1 {"node0":49, "node1":64, "node2":40, "node3":57, "node4":40}
+Received message [MessageType: 1] from [127.0.0.1:10014]
+node1 {"node0":49, "node1":65, "node2":40, "node3":57, "node4":42}
+Received Message From Node
+node1 {"node0":49, "node1":66, "node2":40, "node3":57, "node4":42}
+Received message [MessageType: 0] from [127.0.0.1:10014]
+node1 {"node0":49, "node1":67, "node2":40, "node3":57, "node4":42}
+Round Trip Response
+node1 {"node0":49, "node1":68, "node2":40, "node3":62, "node4":44}
+Received Message From Node
+node1 {"node0":49, "node1":69, "node2":40, "node3":62, "node4":44}
+Received message [MessageType: 0] from [127.0.0.1:10013]
+node1 {"node0":49, "node1":70, "node2":40, "node3":62, "node4":44}
+Round Trip Response
+node1 {"node0":49, "node1":71, "node2":48, "node3":63, "node4":44}
+Received Message From Node
+node1 {"node0":49, "node1":72, "node2":48, "node3":63, "node4":44}
+Received message [MessageType: 0] from [127.0.0.1:10012]
+node1 {"node0":49, "node1":73, "node2":48, "node3":63, "node4":44}
+Round Trip Response
+node1 {"node0":49, "node1":74, "node2":48, "node3":63, "node4":44}
+Round Trip Request
+node1 {"node0":49, "node1":75, "node2":48, "node3":63, "node4":44}
+Round Trip Request
+node1 {"node0":49, "node1":76, "node2":48, "node3":63, "node4":44}
+Round Trip Request
+node1 {"node0":49, "node1":77, "node2":48, "node3":63, "node4":44}
+Round Trip Request
+node1 {"node0":49, "node1":78, "node2":59, "node3":73, "node4":56}
+Received Message From Node
+node1 {"node0":49, "node1":79, "node2":59, "node3":73, "node4":56}
+Received message [MessageType: 1] from [127.0.0.1:10012]
+node1 {"node0":49, "node1":80, "node2":59, "node3":73, "node4":59}
+Received Message From Node
+node1 {"node0":49, "node1":81, "node2":59, "node3":73, "node4":59}
+Received message [MessageType: 1] from [127.0.0.1:10014]
+node1 {"node0":49, "node1":82, "node2":59, "node3":76, "node4":59}
+Received Message From Node
+node1 {"node0":49, "node1":83, "node2":59, "node3":76, "node4":59}
+Received message [MessageType: 1] from [127.0.0.1:10013]
+node1 {"node0":49, "node1":84, "node2":59, "node3":76, "node4":61}
+Received Message From Node
+node1 {"node0":49, "node1":85, "node2":59, "node3":76, "node4":61}
+Received message [MessageType: 0] from [127.0.0.1:10014]
+node1 {"node0":49, "node1":86, "node2":59, "node3":76, "node4":61}
+Round Trip Response
+node1 {"node0":49, "node1":87, "node2":59, "node3":81, "node4":63}
+Received Message From Node
+node1 {"node0":49, "node1":88, "node2":59, "node3":81, "node4":63}
+Received message [MessageType: 0] from [127.0.0.1:10013]
+node1 {"node0":49, "node1":89, "node2":59, "node3":81, "node4":63}
+Round Trip Response
+node1 {"node0":49, "node1":90, "node2":67, "node3":82, "node4":63}
+Received Message From Node
+node1 {"node0":49, "node1":91, "node2":67, "node3":82, "node4":63}
+Received message [MessageType: 0] from [127.0.0.1:10012]
+node1 {"node0":49, "node1":92, "node2":67, "node3":82, "node4":63}
+Round Trip Response

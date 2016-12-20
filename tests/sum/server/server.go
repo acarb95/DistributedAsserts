@@ -1,11 +1,13 @@
 package main
 
 import (
+	"bitbucket.org/bestchai/dinv/dinvRT"
 	"encoding/binary"
 	"fmt"
 	"github.com/arcaneiceman/GoVector/capture"
 	"net"
 	"os"
+	"time"
     "github.com/acarb95/DistributedAsserts/assert"
 )
 
@@ -16,9 +18,18 @@ var b int64
 var sum int64
 
 func main() {
+
+	// ============================== ASSERT CODE ==============================
 	client_assert_addr := ":18589"
 	server_assert_addr := ":9099"
 	assert.InitDistributedAssert(server_assert_addr, []string{client_assert_addr}, "server");
+	assert.AddAssertable("a", &a, nil);
+	assert.AddAssertable("b", &b, nil);
+	assert.AddAssertable("sum", &sum, nil)
+	// ============================ END ASSERT CODE ============================
+
+	time.Sleep(5*time.Second)
+
 	conn, err := net.ListenPacket("udp4", addr)
 	if err != nil {
 		fmt.Printf("[SERVER] %s\n", err.Error())
@@ -26,11 +37,7 @@ func main() {
 	}
 	defer conn.Close()
 
-	assert.AddAssertable("a", &a, nil);
-	assert.AddAssertable("b", &b, nil);
-	assert.AddAssertable("sum", &sum, nil)
-
-	fmt.Printf("[SERVER] listening on %s\n", addr)
+	// fmt.Printf("[SERVER] listening on %s\n", addr)
 
 	//main loop
 	for {
@@ -54,20 +61,23 @@ func listenAndRespond(conn net.PacketConn) (err error) {
 	}
 
 	// var readA, readB int
-	//@dump
+	dinvRT.Track("server", "a, b, sum", a, b, sum)
 
 	a, _ = binary.Varint(buf[:8])
 	b, _ = binary.Varint(buf[8:])
 
-	// a = a + 5 // Uncomment to force error on server side reading of variables
+	// ============================== ASSERT CODE ==============================
+	// a = a + 5 // CHANGE TO: Uncomment to force error on server side reading of variables
 
-	sum = a + b - 3
+	sum = a + b // - 3 // CHANGE TO: Uncomment to force error on server side for sum computation
+	// ============================ END ASSERT CODE ============================
+
 
 	// fmt.Println(buf)
 	// fmt.Println(buf[:8], a, readA)
 	// fmt.Println(buf[8:], b, readB)
 
-	fmt.Printf("[SERVER] %d + %d = %d\n", a, b, sum)
+	// fmt.Printf("[SERVER] %d + %d = %d\n", a, b, sum)
 
 	msg := make([]byte, 32)
 	binary.PutVarint(msg, sum) //putN := 
