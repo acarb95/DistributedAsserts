@@ -130,7 +130,7 @@ func main() {
 	idInput = *idarg
 	hostsInput = *hostsarg
 	timeInput = *timearg
-	plan := Plan{idInput, 1000, timeInput}
+	plan := Plan{idInput, 100, timeInput}
 
 	// fmt.Println(plan.Criticals)
     fileName := fmt.Sprintf("node%d-benchmarking-result.txt", idInput)

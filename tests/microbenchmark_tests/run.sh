@@ -1,7 +1,7 @@
 #!/bin/bash
 
 HOSTS=5
-SLEEPTIME=20
+SLEEPTIME=300
 
 DINV=$GOPATH/src/bitbucket.org/bestchai/dinv
 testDir=$GOPATH/src/github.com/acarb95/DistributedAsserts/tests/microbenchmark_tests
@@ -18,10 +18,11 @@ function runTest {
         go run node.go -id=$i -hosts=$HOSTS -time=$SLEEPTIME &
     done
 
-    sleep 15
-    mkdir results
-    mv *.log-Log.txt results
-    mv *Encoded.txt results
+    sleep 60
+    mkdir results-10ms
+    # mv *.log-Log.txt results
+    # mv *Encoded.txt results
+    mv *.txt results-10ms
     # shutdown
 }
 
@@ -64,9 +65,14 @@ function runDaikon {
     done
 }
 
+function createResults {
+    mv *.txt results
+}
+
 function cleanup {
     cd $testDir
     rm -rf results
+    rm *.txt
     # shutdown
 }    
 
@@ -90,8 +96,9 @@ then
     exit
 fi
 runTest
-runLogMerger
-runDaikon
+# runLogMerger
+# runDaikon
+# createResults
 if [ "$1" == "-d" ];
 then
     exit

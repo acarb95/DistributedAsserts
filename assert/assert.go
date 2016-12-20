@@ -211,8 +211,13 @@ func processData(message_chan chan _message){
                 case SYNC_REQUEST:
                     if (roundNumberTime <= message.RoundNumber) {
                         roundNumberTime = message.RoundNumber
-                        timeOffset = timeOffset + time.Duration(message.Result.(uint64))
-                        // fmt.Printf("Time is: %v\n", getTime())
+                        result, err := message.Result.(int64)
+                        if err {
+                            // fmt.Printf("Result: %v, parsed: %d, error: %v\n", message.Result, result, err)
+                        } else {
+                            timeOffset = timeOffset + time.Duration(result)
+                        }
+                        // fmt.Printf("Time is: %v, time offset: %v\n", getTime(), timeOffset)
                     }
                     break
                 case ASSERT_FAILED:
@@ -256,9 +261,9 @@ func GetAssertDelay() time.Duration {
             duration = v
         }
     }
-    message := fmt.Sprintf("RTT: %d", duration+50*time.Millisecond)
+    message := fmt.Sprintf("RTT: %v", 50*time.Millisecond)
     LOG.LogLocalEvent(message)
-    return duration + 50 * time.Millisecond
+    return 10 * time.Millisecond //+ duration 
 }
 
 
