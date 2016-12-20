@@ -48,7 +48,7 @@ func EatingState() {
 func ThinkingState() {
 	Eating = false
 	Thinking = true
-	LeftChopstick = true//false
+	LeftChopstick = false // CHANGE TO false
 	RightChopstick = false
 }
 
@@ -162,7 +162,6 @@ func getRequest(conn net.PacketConn) (int, net.Addr) {
 //Transition and print state, then sleep for a random amount of time
 func (phil *Philosopher) think() {
 	ThinkingState()
-	// ASSERT THINKING STATE
 	// fmt.Printf("%d is thinking.\n", phil.id)
 	time.Sleep(time.Duration(rand.Int63n(SLEEP_MAX)))
 }
@@ -170,7 +169,6 @@ func (phil *Philosopher) think() {
 //Eat and then wait for a random amount of time
 func (phil *Philosopher) eat() {
 	EatingState()
-	// ASSERT EATING STATE
 	// fmt.Printf("%d is eating.\n", phil.id)
 	time.Sleep(time.Duration(rand.Int63n(SLEEP_MAX)))
 }
@@ -208,7 +206,6 @@ func (phil *Philosopher) getChopsticks() {
 			// fmt.Printf("Received chopstick %d <- %d\n", phil.id, phil.neighbourId)
 			neighbourChopstick <- true
 			RightChopstickState()
-			// ASSERT RIGHT CHOPSTICK (NOT OTHER STATES) AND NEIGHBOR DOESN'T HAVE IT
 		}
 	}()
 	select {
@@ -218,6 +215,7 @@ func (phil *Philosopher) getChopsticks() {
 		requestedValues := make(map[string][]string)
 		requestedValues[fmt.Sprintf(":%d", phil.id+150)] = append(requestedValues[fmt.Sprintf(":%d", phil.id+150)], "RightChopstick")
 		requestedValues[fmt.Sprintf(":%d", phil.neighbourId+150)] = append(requestedValues[fmt.Sprintf(":%d", phil.neighbourId+150)], "LeftChopstick")
+		// CALLING ASSERTION
 		assert.Assert(assertRightChopstick, requestedValues)
 
 		return
@@ -236,7 +234,6 @@ func (phil *Philosopher) returnChopsticks() {
 	conn := phil.neighbour
 	capture.Write(conn.Write, req)
 	ThinkingState()
-	// ASSERT THINKING STATE
 }
 
 func (phil *Philosopher) dine() {
@@ -281,6 +278,8 @@ func main() {
 	assert.AddAssertable("Thinking", &Thinking, nil);
 	assert.AddAssertable("LeftChopstick", &LeftChopstick, nil);
 	assert.AddAssertable("RightChopstick", &RightChopstick, nil);
+
+	time.Sleep(15*time.Second)
 
 	philosopher := makePhilosopher(myPort, neighbourPort)
 	for i := 0; i < 100; i++ {
